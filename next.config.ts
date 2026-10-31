@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Lets a production build for QA (NEXT_DIST_DIR=.next-prod) run alongside `next dev`
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   images: {
     // Unsplash URLs are already sized/compressed; skipping the optimizer in dev avoids
     // upstream fetch timeouts on slow connections. Production keeps AVIF/WebP optimisation.
