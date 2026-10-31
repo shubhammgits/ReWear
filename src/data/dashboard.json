@@ -1,0 +1,27 @@
+{
+  "user": { "name": "Ananya", "memberSince": "2024", "wallet": 4650 },
+  "rentals": [
+    { "id": "bk-1041", "itemId": "rw-019", "status": "upcoming", "start": "2026-11-08T17:00", "end": "2026-11-08T23:00", "total": 1347 },
+    { "id": "bk-1038", "itemId": "rw-006", "status": "active", "start": "2026-10-30T09:00", "end": "2026-10-31T09:00", "total": 648 },
+    { "id": "bk-1022", "itemId": "rw-004", "status": "completed", "start": "2026-10-20T10:00", "end": "2026-10-21T10:00", "total": 1548 },
+    { "id": "bk-0997", "itemId": "rw-002", "status": "completed", "start": "2026-09-27T19:00", "end": "2026-09-27T23:00", "total": 448 }
+  ],
+  "earnings": {
+    "monthly": [
+      { "month": "May", "amount": 6200 },
+      { "month": "Jun", "amount": 8900 },
+      { "month": "Jul", "amount": 7400 },
+      { "month": "Aug", "amount": 12800 },
+      { "month": "Sep", "amount": 15600 },
+      { "month": "Oct", "amount": 18450 }
+    ],
+    "pendingPayout": 6320,
+    "nextPayoutDate": "2026-11-05",
+    "listings": [
+      { "itemId": "rw-001", "rentals": 14, "earned": 21420, "status": "Rented" },
+      { "itemId": "rw-007", "rentals": 11, "earned": 9350, "status": "Available" },
+      { "itemId": "rw-014", "rentals": 19, "earned": 10450, "status": "Available" },
+      { "itemId": "rw-016", "rentals": 6, "earned": 4590, "status": "Cleaning" }
+    ]
+  }
+}

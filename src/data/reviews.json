@@ -1,0 +1,68 @@
+[
+  {
+    "id": "rv-1",
+    "itemId": "rw-001",
+    "name": "Ritika S.",
+    "avatar": "photo-1544005313-94ddf0286df2",
+    "city": "Mumbai",
+    "rating": 5,
+    "occasion": "Wedding",
+    "text": "Wore it to my cousin's sangeet and got asked 'where did you buy this?' eleven times. I did not buy it. That's the best part.",
+    "date": "2026-09-14"
+  },
+  {
+    "id": "rv-2",
+    "itemId": "rw-003",
+    "name": "Vikram N.",
+    "avatar": "photo-1507003211169-0a1dd7228f2d",
+    "city": "Delhi",
+    "rating": 5,
+    "occasion": "Party",
+    "text": "Fit like it was tailored for me. Picked up at 6, returned next morning. Cheaper than a dry-clean of my own suit.",
+    "date": "2026-08-22"
+  },
+  {
+    "id": "rv-3",
+    "itemId": "rw-002",
+    "name": "Aisha K.",
+    "avatar": "photo-1438761681033-6461ffad8d80",
+    "city": "Bengaluru",
+    "rating": 5,
+    "occasion": "Date night",
+    "text": "Rented it for four hours. Got engaged in it. I'm not saying the dress did it, but I'm not saying it didn't.",
+    "date": "2026-10-02"
+  },
+  {
+    "id": "rv-4",
+    "itemId": "rw-006",
+    "name": "Pranav M.",
+    "avatar": "photo-1500648767791-00dcc994a43e",
+    "city": "Hyderabad",
+    "rating": 4,
+    "occasion": "Interview",
+    "text": "Crisp, clean and delivered 2 hours before my interview. Got the job. Already listed my own suits here.",
+    "date": "2026-07-30"
+  },
+  {
+    "id": "rv-5",
+    "itemId": "rw-004",
+    "name": "Divya R.",
+    "avatar": "photo-1494790108377-be9c29b29330",
+    "city": "Chennai",
+    "rating": 5,
+    "occasion": "Festival",
+    "text": "The silk was even richer in person. Lakshmi aunty helped me drape it over video call. Ten stars.",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "rv-6",
+    "itemId": "rw-019",
+    "name": "Tara J.",
+    "avatar": "photo-1534528741775-53994a69daeb",
+    "city": "Mumbai",
+    "rating": 5,
+    "occasion": "Photoshoot",
+    "text": "Booked it for a 4-hour shoot. The photographer literally gasped. Return pickup was right on time.",
+    "date": "2026-09-03"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "ln-1",
+    "name": "Ananya Iyer",
+    "avatar": "photo-1494790108377-be9c29b29330",
+    "city": "Mumbai",
+    "verified": true,
+    "rating": 4.9,
+    "rentals": 212,
+    "joined": "2024",
+    "responseTime": "within 15 min",
+    "bio": "Wedding-season veteran with a closet full of lehengas I wore exactly once. Now they get to party every weekend."
+  },
+  {
+    "id": "ln-2",
+    "name": "Meher Kapoor",
+    "avatar": "photo-1438761681033-6461ffad8d80",
+    "city": "Bengaluru",
+    "verified": true,
+    "rating": 4.8,
+    "rentals": 148,
+    "joined": "2024",
+    "responseTime": "within 30 min",
+    "bio": "Stylist by day. I list the pieces I love but can't justify keeping in rotation."
+  },
+  {
+    "id": "ln-3",
+    "name": "Arjun Malhotra",
+    "avatar": "photo-1500648767791-00dcc994a43e",
+    "city": "Delhi",
+    "verified": true,
+    "rating": 4.9,
+    "rentals": 96,
+    "joined": "2025",
+    "responseTime": "within 1 hr",
+    "bio": "Bought a tux for one reception. It has now been to 41 more."
+  },
+  {
+    "id": "ln-4",
+    "name": "Lakshmi Raghavan",
+    "avatar": "photo-1544005313-94ddf0286df2",
+    "city": "Chennai",
+    "verified": true,
+    "rating": 5,
+    "rentals": 173,
+    "joined": "2023",
+    "responseTime": "within 20 min",
+    "bio": "Three generations of silk sarees, finally getting the outings they deserve."
+  },
+  {
+    "id": "ln-5",
+    "name": "Kabir Shah",
+    "avatar": "photo-1507003211169-0a1dd7228f2d",
+    "city": "Pune",
+    "verified": true,
+    "rating": 4.7,
+    "rentals": 64,
+    "joined": "2025",
+    "responseTime": "within 45 min",
+    "bio": "Minimalist wardrobe, maximal earnings. Linen enthusiast."
+  },
+  {
+    "id": "ln-6",
+    "name": "Sana Qureshi",
+    "avatar": "photo-1534528741775-53994a69daeb",
+    "city": "Hyderabad",
+    "verified": false,
+    "rating": 4.8,
+    "rentals": 58,
+    "joined": "2025",
+    "responseTime": "within 1 hr",
+    "bio": "Corporate closet clear-out turned side hustle. Blazers that mean business."
+  }
+]

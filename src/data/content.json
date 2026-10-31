@@ -1,0 +1,25 @@
+{
+  "occasions": [
+    { "name": "Wedding", "tagline": "Lehengas, sherwanis & everything shaadi", "image": "photo-1519741497674-611481863552", "alt": "Couple at an elegant wedding celebration" },
+    { "name": "Party", "tagline": "Sequins, satin & after-hours shine", "image": "photo-1492684223066-81342ee5ff30", "alt": "Friends celebrating at a party with confetti" },
+    { "name": "Festival", "tagline": "Garba, Diwali & every reason to dress up", "image": "photo-1533174072545-7a4b6ad7a6c3", "alt": "Crowd celebrating at a festival with colourful lights" },
+    { "name": "Interview", "tagline": "Sharp blazers for big first impressions", "image": "photo-1507679799987-c73779587ccf", "alt": "Professional in a tailored blazer" },
+    { "name": "Photoshoot", "tagline": "Editorial looks the camera adores", "image": "photo-1554048612-b6a482bc67e5", "alt": "Model posing during a fashion photoshoot" },
+    { "name": "Date night", "tagline": "Slip dresses & smart jackets for tonight", "image": "photo-1529636798458-92182e662485", "alt": "Couple dressed up for an evening out" }
+  ],
+  "faqs": [
+    { "q": "How does renting work?", "a": "Pick an outfit, choose your hours or days, and pay securely. We deliver it fresh-cleaned to your door (or you pick it up from the lender), and collect it when your rental ends. No laundry, no stress." },
+    { "q": "What if my outfit doesn't fit?", "a": "Every listing shows exact measurements. If it still doesn't fit on arrival, tell us within 1 hour and we'll swap it or refund the rental fee in full." },
+    { "q": "Is the security deposit refundable?", "a": "Yes, 100%. Your deposit is held (not charged) and released within 48 hours of the lender confirming a safe return." },
+    { "q": "Who cleans the clothes?", "a": "Our partner studios professionally clean every piece between rentals, so you always get it fresh. The cleaning fee is shown upfront — never a surprise." },
+    { "q": "What happens if something gets damaged?", "a": "Small accidents happen. ReWear Damage Protection covers minor stains, loose threads and missing buttons. For bigger damage, we mediate fairly using check-in and check-out photos." },
+    { "q": "How much can I earn as a lender?", "a": "Lenders keep 85% of every rental. Most active lenders with 5–10 occasion pieces earn ₹8,000–₹25,000 a month, and you can pause listings anytime." }
+  ],
+  "stats": [
+    { "label": "Outfits reused", "value": 128400, "suffix": "+" },
+    { "label": "Litres of water saved", "value": 3850000, "suffix": "" },
+    { "label": "kg of CO₂ avoided", "value": 412000, "suffix": "" },
+    { "label": "Lenders earning monthly", "value": 9200, "suffix": "+" }
+  ],
+  "cities": ["Mumbai", "Delhi", "Bengaluru", "Pune", "Hyderabad", "Chennai", "Kolkata", "Jaipur"]
+}

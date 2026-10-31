@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* ───────────── Design tokens ───────────── */
+:root {
+  --ivory: #faf7f2;
+  --ink: #14110f;
+  --plum: #4b1d3f;
+  --plum-deep: #34122b;
+  --gold: #c9a24b;
+  --blush: #f3d9d3;
+  --sand: #efe8dd;
+  --muted: #5d5650;
+  --line: rgba(20, 17, 15, 0.12);
+
+  --radius-card: 1.5rem;
+  --shadow-soft-value: 0 1px 2px rgba(20, 17, 15, 0.04), 0 12px 32px -12px rgba(75, 29, 63, 0.18);
+  --shadow-lift-value: 0 2px 4px rgba(20, 17, 15, 0.05), 0 28px 60px -20px rgba(75, 29, 63, 0.35);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-ivory: var(--ivory);
+  --color-ink: var(--ink);
+  --color-plum: var(--plum);
+  --color-plum-deep: var(--plum-deep);
+  --color-gold: var(--gold);
+  --color-blush: var(--blush);
+  --color-sand: var(--sand);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+
+  --font-display: var(--font-fraunces), "Times New Roman", serif;
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+
+  --shadow-soft: var(--shadow-soft-value);
+  --shadow-lift: var(--shadow-lift-value);
+}
+
+/* ───────────── Base ───────────── */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--plum);
+  color: var(--ivory);
+}
+
+:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+}
+
+/* Film grain overlay — a tiny inline SVG noise tile, no network cost */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-5%, 4%); }
+  40% { transform: translate(3%, -6%); }
+  60% { transform: translate(-4%, 2%); }
+  80% { transform: translate(5%, 5%); }
+}
+
+/* Marquee */
+.marquee {
+  animation: marquee 28s linear infinite;
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Range slider */
+input[type="range"].range {
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--plum) var(--fill, 50%), var(--sand) var(--fill, 50%));
+  cursor: pointer;
+}
+input[type="range"].range::-webkit-slider-thumb {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--ivory);
+  border: 2px solid var(--plum);
+  box-shadow: 0 4px 12px rgba(75, 29, 63, 0.3);
+  transition: transform 0.2s var(--ease-out-expo);
+}
+input[type="range"].range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+input[type="range"].range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--ivory);
+  border: 2px solid var(--plum);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Hide the native cursor only once the custom cursor is mounted */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain {
+    animation: none;
+  }
+}
