@@ -42,3 +42,4 @@ next-env.d.ts
 /.next-prod/
 /.playwright-mcp/
 /qa/runs/
+/.next-qa/

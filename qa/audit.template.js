@@ -88,6 +88,48 @@ async (page) => {
         }
       }
 
+      // 2b. Text blocks whose box intersects a photo, whichever paints on top
+      //     (skips overlays that belong to the same card/figure as the photo)
+      const shown = (el) => {
+        for (let a = el; a && a !== document.body; a = a.parentElement) {
+          const s = getComputedStyle(a);
+          if (s.visibility === "hidden" || s.display === "none" || Number(s.opacity) < 0.05) return false;
+        }
+        return true;
+      };
+      const media = [...document.querySelectorAll("img, canvas, .cs-item")]
+        .filter((m) => !m.closest(".cs-item") || m.classList.contains("cs-item"))
+        .map((m) => {
+          // What's actually painted: the box clipped by every overflow-hidden ancestor
+          const b = m.getBoundingClientRect();
+          let r = { left: b.left, top: b.top, right: b.right, bottom: b.bottom };
+          for (let a = m.parentElement; a && a !== document.body; a = a.parentElement) {
+            const s = getComputedStyle(a);
+            if (["hidden", "clip"].includes(s.overflowX) || ["hidden", "clip"].includes(s.overflowY)) {
+              const c = a.getBoundingClientRect();
+              r = { left: Math.max(r.left, c.left), top: Math.max(r.top, c.top), right: Math.min(r.right, c.right), bottom: Math.min(r.bottom, c.bottom) };
+            }
+          }
+          return { m, r: { ...r, width: r.right - r.left, height: r.bottom - r.top } };
+        })
+        .filter(({ m, r }) => visible(r) && r.width > 40 && r.height > 40 && shown(m));
+      out.intersects = [];
+      for (const t of document.querySelectorAll("h1,h2,h3,p,blockquote")) {
+        if (!t.textContent.trim() || !shown(t)) continue;
+        const tr = t.getBoundingClientRect();
+        if (!visible(tr)) continue;
+        for (const { m, r } of media) {
+          const owner = m.closest("a, figure, li, article, .group, [data-overlay]");
+          if (owner && owner.contains(t)) continue;
+          const ix = Math.min(tr.right, r.right) - Math.max(tr.left, r.left);
+          const iy = Math.min(tr.bottom, r.bottom) - Math.max(tr.top, r.top);
+          if (ix > 8 && iy > 8) {
+            out.intersects.push(`${label(t)} x ${m.tagName.toLowerCase()}${m.getAttribute("alt") ? ' alt="' + m.getAttribute("alt").slice(0, 25) + '"' : ""}`);
+            break;
+          }
+        }
+      }
+
       // 3. Tap targets < 44px
       for (const el of document.querySelectorAll("a[href], button, input, select, textarea, [role=button], [role=tab]")) {
         const r = el.getBoundingClientRect();
@@ -109,8 +151,8 @@ async (page) => {
 
   const findings = {};
   const merge = (key, r) => {
-    const f = (findings[key] ||= { overflow: new Set(), covered: new Set(), smallTargets: new Set(), smallInputs: new Set(), pageScrollsSideways: false });
-    for (const k of ["overflow", "covered", "smallTargets", "smallInputs"]) r[k].forEach((x) => f[k].add(x));
+    const f = (findings[key] ||= { overflow: new Set(), covered: new Set(), intersects: new Set(), smallTargets: new Set(), smallInputs: new Set(), pageScrollsSideways: false });
+    for (const k of ["overflow", "covered", "intersects", "smallTargets", "smallInputs"]) (r[k] || []).forEach((x) => f[k].add(x));
     if (r.scrollWidth > r.vw + 1) f.pageScrollsSideways = `${r.scrollWidth} > ${r.vw}`;
   };
 
@@ -169,7 +211,7 @@ async (page) => {
   const result = { config: CONFIG.name, console: [...new Set(consoleMsgs)].slice(0, 25), findings: {} };
   for (const [k, f] of Object.entries(findings)) {
     const entry = {};
-    for (const key of ["overflow", "covered", "smallTargets", "smallInputs"]) if (f[key].size) entry[key] = [...f[key]].slice(0, 12);
+    for (const key of ["overflow", "covered", "intersects", "smallTargets", "smallInputs"]) if (f[key].size) entry[key] = [...f[key]].slice(0, 12);
     if (f.pageScrollsSideways) entry.pageScrollsSideways = f.pageScrollsSideways;
     if (Object.keys(entry).length) result.findings[k] = entry;
   }

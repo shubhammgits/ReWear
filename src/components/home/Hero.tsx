@@ -17,8 +17,11 @@ export function Hero() {
   return (
     <section className="relative min-h-[100svh] overflow-hidden pt-28" aria-labelledby="hero-title">
       {/* warm backdrop glow */}
-      <div aria-hidden className="pointer-events-none absolute -right-40 top-10 h-[620px] w-[620px] rounded-full bg-blush/70 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full bg-gold/15 blur-3xl" />
+      {/* warm backdrop glow: sized in vw so it never pushes past small screens */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-0 overflow-hidden">
+        <div className="absolute -right-[12vw] top-10 aspect-square w-[clamp(18rem,48vw,39rem)] rounded-full bg-blush/70 blur-3xl" />
+        <div className="absolute -left-[12vw] bottom-0 aspect-square w-[clamp(14rem,32vw,26rem)] rounded-full bg-gold/15 blur-3xl" />
+      </div>
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-6 px-6 lg:min-h-[calc(100svh-7rem)] lg:grid-cols-[1.05fr_1fr]">
         <div className="relative z-10 py-6 lg:py-0">

@@ -25,8 +25,8 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
   };
 
   return (
-    <div className="flex flex-col-reverse gap-4 lg:flex-row">
-      <div className="no-scrollbar flex gap-3 overflow-x-auto lg:flex-col" role="tablist" aria-label="Product images">
+    <div className="flex min-w-0 flex-col-reverse gap-4 lg:flex-row lg:items-start">
+      <div className="no-scrollbar flex min-w-0 shrink-0 gap-3 overflow-x-auto lg:flex-col" role="tablist" aria-label="Product images">
         {images.map((src, i) => (
           <button
             key={src}
@@ -60,7 +60,7 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
         </button>
       </div>
 
-      <div className="relative aspect-[3/4] flex-1 overflow-hidden rounded-[2rem] bg-sand shadow-soft">
+      <div className="relative aspect-[3/4] w-full min-w-0 overflow-hidden rounded-[2rem] bg-sand shadow-soft lg:flex-1">
         {mode3D ? (
           <ItemViewer3D image={img(images[active], 900)} />
         ) : (

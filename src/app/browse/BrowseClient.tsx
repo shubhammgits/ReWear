@@ -152,7 +152,8 @@ export function BrowseClient() {
   return (
     <div className="mx-auto max-w-7xl px-6 pb-28">
       {/* Toolbar */}
-      <div className="sticky top-20 z-30 -mx-2 mb-10 flex flex-wrap items-center gap-3 rounded-full bg-ivory/85 p-2 shadow-soft ring-1 ring-ink/5 backdrop-blur-xl">
+      {/* Wraps to two rows on phones, where a full pill radius would cut into the corner buttons */}
+      <div className="sticky top-20 z-30 -mx-2 mb-10 flex flex-wrap items-center gap-3 rounded-[1.75rem] bg-ivory/85 sm:rounded-full p-2 shadow-soft ring-1 ring-ink/5 backdrop-blur-xl">
         <label className="relative flex min-w-[200px] flex-1 items-center">
           <span className="sr-only">Search outfits</span>
           <Search className="pointer-events-none absolute left-4 h-4 w-4 text-muted" aria-hidden />

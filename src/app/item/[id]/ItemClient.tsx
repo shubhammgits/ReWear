@@ -57,10 +57,11 @@ export function ItemClient({ item, lender, reviews, similar }: { item: Item; len
         <ChevronLeft className="h-4 w-4" aria-hidden /> Back to browse
       </Link>
 
-      <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr]">
+      {/* minmax(0,…) + min-w-0: the thumbnail scroller must not widen the column past the viewport */}
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         <Gallery images={item.images} alt={item.imageAlt} />
 
-        <div>
+        <div className="min-w-0">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-plum">
             {item.category} · {item.type}
           </p>
