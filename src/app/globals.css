@@ -39,6 +39,9 @@
 /* ───────────── Base ───────────── */
 html {
   -webkit-text-size-adjust: 100%;
+  /* iOS < 16 has no overflow: clip — hidden is the fallback, clip wins where supported */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 html.lenis,
@@ -58,7 +61,20 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  font-size: 1rem;
+  /* No `hidden` fallback here: on old iOS it would make body a scroll container and break sticky/pins */
   overflow-x: clip;
+}
+
+/* Locks the page behind the full-screen mobile menu */
+html.menu-open,
+html.menu-open body {
+  overflow: hidden;
+}
+
+/* Keeps fixed bottom bars clear of the iPhone home indicator */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 ::selection {
@@ -136,6 +152,30 @@ input[type="range"].range::-moz-range-thumb {
   border-radius: 999px;
   background: var(--ivory);
   border: 2px solid var(--plum);
+}
+/* Bigger thumb (and a taller hit area) for fingers */
+@media (pointer: coarse) {
+  input[type="range"].range {
+    height: 8px;
+  }
+  input[type="range"].range::-webkit-slider-thumb {
+    width: 30px;
+    height: 30px;
+  }
+  input[type="range"].range::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Selects: drop the native (grey, square in Safari) chrome, keep a drawn chevron */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' fill='none' stroke='%2314110f' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem !important;
 }
 
 .no-scrollbar::-webkit-scrollbar {

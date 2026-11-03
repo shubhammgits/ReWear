@@ -79,7 +79,7 @@ export function Modal({
             aria-label={label}
             data-lenis-prevent
             className={cn(
-              "relative max-h-[92vh] w-full overflow-y-auto rounded-t-[2rem] bg-ivory shadow-lift sm:max-w-3xl sm:rounded-[2rem]",
+              "relative max-h-[92dvh] w-full overflow-y-auto overscroll-contain rounded-t-[2rem] bg-ivory shadow-lift sm:max-w-3xl sm:rounded-[2rem]",
               className
             )}
             initial={{ y: 60, opacity: 0, scale: 0.98 }}
@@ -90,7 +90,7 @@ export function Modal({
             <button
               onClick={onClose}
               aria-label="Close"
-              className="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-ivory/90 text-ink shadow-soft transition hover:bg-plum hover:text-ivory"
+              className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-ivory/90 text-ink shadow-soft transition hover:bg-plum hover:text-ivory"
             >
               <X className="h-4 w-4" aria-hidden />
             </button>

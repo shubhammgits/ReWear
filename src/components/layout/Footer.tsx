@@ -69,9 +69,9 @@ export function Footer() {
                 placeholder="you@email.com"
                 aria-invalid={state === "error"}
                 aria-describedby="newsletter-msg"
-                className="min-w-0 flex-1 bg-transparent px-4 text-sm text-ivory placeholder:text-ivory/40 focus:outline-none"
+                className="h-11 min-w-0 flex-1 bg-transparent px-4 text-base text-ivory placeholder:text-ivory/40 focus:outline-none"
               />
-              <button type="submit" className="inline-flex h-10 items-center gap-1 rounded-full bg-gold px-4 text-sm font-semibold text-ink transition hover:brightness-110">
+              <button type="submit" className="inline-flex h-11 shrink-0 items-center gap-1 rounded-full bg-gold px-5 text-sm font-semibold text-ink transition hover:brightness-110">
                 Join <ArrowRight className="h-4 w-4" aria-hidden />
               </button>
             </div>
@@ -95,10 +95,10 @@ export function Footer() {
           {columns.map((c) => (
             <nav key={c.title} aria-label={c.title}>
               <h2 className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-gold">{c.title}</h2>
-              <ul className="mt-5 space-y-3">
+              <ul className="mt-3">
                 {c.links.map(([label, href]) => (
                   <li key={label}>
-                    <Link href={href} className="text-ivory/70 transition hover:text-ivory">
+                    <Link href={href} className="inline-flex min-h-11 items-center text-ivory/70 transition hover:text-ivory">
                       {label}
                     </Link>
                   </li>
@@ -111,7 +111,7 @@ export function Footer() {
       <p aria-hidden className="pointer-events-none select-none whitespace-nowrap text-center font-display text-[22vw] leading-[0.8] text-ivory/[0.04]">
         ReWear
       </p>
-      <div className="mx-auto flex max-w-7xl flex-col gap-2 border-t border-ivory/10 px-6 py-6 text-xs text-ivory/50 sm:flex-row sm:justify-between">
+      <div className="mx-auto flex max-w-7xl flex-col gap-2 border-t border-ivory/10 px-6 pb-28 pt-6 text-xs md:pb-6 text-ivory/50 sm:flex-row sm:justify-between">
         <p>© {new Date().getFullYear()} ReWear Technologies. Made with love (and lots of chai) in India.</p>
         <p>Images via Unsplash · Demo build with mock data</p>
       </div>

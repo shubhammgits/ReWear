@@ -30,7 +30,7 @@ export function Hero() {
             Rent by the hour. Lend by the day.
           </motion.p>
 
-          <h1 id="hero-title" className="font-display text-[clamp(3.2rem,9vw,7.5rem)] font-medium leading-[0.92] tracking-[-0.035em]">
+          <h1 id="hero-title" className="font-display text-[clamp(2.75rem,11vw,7.5rem)] font-medium leading-[0.92] tracking-[-0.035em]">
             <RevealText as="span" text="Wear more." immediate className="block" delay={0.15} />
             <RevealText as="span" text="Own less." immediate className="block italic text-plum" delay={0.35} />
           </h1>
@@ -64,7 +64,7 @@ export function Hero() {
           </motion.div>
         </div>
 
-        <div className="relative h-[52vh] min-h-[360px] lg:h-[78vh]">
+        <div className="relative h-[52svh] min-h-[360px] lg:h-[78svh]">
           <HeroVisual />
         </div>
       </div>
@@ -72,7 +72,7 @@ export function Hero() {
       <motion.a
         href="#idea"
         {...fade(1.2)}
-        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-[0.25em] text-muted lg:flex"
+        className="absolute bottom-4 left-1/2 hidden min-h-11 -translate-x-1/2 flex-col items-center justify-center gap-2 p-2 text-xs uppercase tracking-[0.25em] text-muted lg:flex"
       >
         Scroll the story
         <ArrowDown className="h-4 w-4 animate-bounce" aria-hidden />

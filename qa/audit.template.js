@@ -69,12 +69,16 @@ async (page) => {
         const r = t.getBoundingClientRect();
         if (!visible(r) || r.width < 4 || r.height < 4) continue;
         if (getComputedStyle(t).visibility === "hidden" || Number(getComputedStyle(t).opacity) === 0) continue;
+        // Corner samples sit inside the border radius, so round buttons aren't "covered" by what's under their corners
+        const rad = parseFloat(getComputedStyle(t).borderTopLeftRadius) || 0;
+        const ix = Math.min(Math.max(6, rad * 0.35), r.width / 2 - 1);
+        const iy = Math.min(Math.max(6, rad * 0.35), r.height / 2 - 1);
         const pts = [
           [r.left + r.width / 2, r.top + r.height / 2],
-          [r.left + 6, r.top + 6],
-          [r.right - 6, r.top + 6],
-          [r.left + 6, r.bottom - 6],
-          [r.right - 6, r.bottom - 6],
+          [r.left + ix, r.top + iy],
+          [r.right - ix, r.top + iy],
+          [r.left + ix, r.bottom - iy],
+          [r.right - ix, r.bottom - iy],
         ];
         for (const [x, y] of pts) {
           if (x < 0 || y < 0 || x > vw || y > vh) continue;
@@ -116,6 +120,10 @@ async (page) => {
       out.intersects = [];
       for (const t of document.querySelectorAll("h1,h2,h3,p,blockquote")) {
         if (!t.textContent.trim() || !shown(t)) continue;
+        // Fixed bars (sticky CTA, price bar) float over content by design
+        let fixed = false;
+        for (let a = t; a && a !== document.body; a = a.parentElement) if (getComputedStyle(a).position === "fixed") fixed = true;
+        if (fixed) continue;
         const tr = t.getBoundingClientRect();
         if (!visible(tr)) continue;
         for (const { m, r } of media) {
@@ -135,6 +143,7 @@ async (page) => {
         const r = el.getBoundingClientRect();
         if (!visible(r)) continue;
         if (el.matches("input[type=range]")) continue;
+        if (r.width <= 2 && r.height <= 2) continue; // visually hidden input; its label/button is the target
         if (el.closest("p") && el.tagName === "A") continue; // inline text links
         if (r.width < 44 || r.height < 44) out.smallTargets.push(`${label(el)} ${Math.round(r.width)}x${Math.round(r.height)}`);
       }
@@ -199,6 +208,8 @@ async (page) => {
     const btn = p.getByRole("button", { name: /open menu/i });
     if (await btn.count()) {
       await btn.click();
+      // Headless WebKit at DPR 3 renders ~4 fps on this machine, so give the sheet's slide time to finish
+      await p.waitForFunction(() => getComputedStyle(document.getElementById("mobile-menu") || document.body).transform === "none", null, { timeout: 15000 }).catch(() => {});
       await settle(800);
       await shot("menu-open");
       merge("menu-open", await inspect());

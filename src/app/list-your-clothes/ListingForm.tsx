@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, ChevronLeft, ChevronRight, ImagePlus, PartyPopper, Trash2, Wand2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Camera, Check, ChevronLeft, ChevronRight, ImagePlus, PartyPopper, Trash2, Wand2 } from "lucide-react";
 import { OCCASIONS, SIZES, content } from "@/lib/api";
 import { PLATFORM_CUT } from "@/lib/pricing";
 import type { OccasionName, Size } from "@/lib/types";
@@ -47,7 +47,7 @@ const initial: FormState = {
   available: [],
 };
 
-const field = "h-12 w-full rounded-2xl bg-ivory px-4 text-sm ring-1 ring-ink/10 transition focus:outline-none focus:ring-2 focus:ring-plum";
+const field = "h-12 w-full rounded-2xl bg-ivory px-4 text-base ring-1 ring-ink/10 transition focus:outline-none focus:ring-2 focus:ring-plum";
 const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 export function ListingForm() {
@@ -132,28 +132,31 @@ export function ListingForm() {
   return (
     <div ref={top} className="mx-auto max-w-4xl scroll-mt-28 px-6 pb-28">
       {/* Progress */}
-      <ol className="mb-10 grid grid-cols-4 gap-2" aria-label="Listing progress">
+      {/* Sticks under the header on phones so progress stays visible on long steps */}
+      <ol className="sticky top-20 z-20 -mx-6 mb-8 grid grid-cols-4 gap-2 bg-ivory/90 px-6 py-1 backdrop-blur-md sm:static sm:mx-0 sm:mb-10 sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none" aria-label="Listing progress">
         {steps.map((s, i) => (
           <li key={s}>
             <button
               onClick={() => i < step && go(i)}
               disabled={i > step}
               aria-current={i === step ? "step" : undefined}
-              className="group w-full text-left disabled:cursor-default"
+              className="group min-h-11 w-full py-2 text-left disabled:cursor-default"
             >
               <span className="block h-1.5 overflow-hidden rounded-full bg-sand">
                 <motion.span className="block h-full bg-plum" initial={false} animate={{ width: i < step ? "100%" : i === step ? "50%" : "0%" }} transition={{ duration: 0.5 }} />
               </span>
-              <span className={cn("mt-2 flex items-center gap-1.5 text-xs font-semibold sm:text-sm", i <= step ? "text-ink" : "text-muted")}>
-                {i < step ? <Check className="h-3.5 w-3.5 text-plum" aria-hidden /> : <span className="text-gold">0{i + 1}</span>}
-                {s}
+              <span className={cn("mt-2 flex min-w-0 items-center gap-1.5 text-xs font-semibold sm:text-sm", i <= step ? "text-ink" : "text-muted")}>
+                {i < step ? <Check className="h-3.5 w-3.5 shrink-0 text-plum" aria-hidden /> : <span className="text-gold">0{i + 1}</span>}
+                {/* Phones show only the current step's name */}
+                <span className={cn("truncate", i !== step && "sr-only sm:not-sr-only")}>{s}</span>
               </span>
             </button>
           </li>
         ))}
       </ol>
 
-      <div className="relative overflow-hidden rounded-[2rem] bg-sand/50 p-6 ring-1 ring-ink/5 sm:p-10">
+      {/* overflow-x-clip (not hidden) so the sticky action bar below still sticks to the viewport */}
+      <div className="relative overflow-x-clip rounded-[2rem] bg-sand/50 p-6 ring-1 ring-ink/5 sm:p-10">
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={step}
@@ -180,7 +183,7 @@ export function ListingForm() {
           )}
         </div>
 
-        <div className="mt-10 flex items-center justify-between gap-3">
+        <div className="pb-safe sticky bottom-0 z-10 -mx-6 mt-10 flex items-center justify-between gap-3 border-t border-line bg-sand px-6 pt-3 sm:static sm:mx-0 sm:border-t-0 sm:bg-transparent sm:p-0 [&>*]:flex-1 sm:[&>*]:flex-none">
           <Button variant="secondary" onClick={() => go(step - 1)} disabled={step === 0} magnetic={false}>
             <ArrowLeft className="h-4 w-4" aria-hidden /> Back
           </Button>
@@ -210,6 +213,7 @@ function StepTitle({ title, hint }: { title: string; hint: string }) {
 
 function PhotosStep({ photos, onChange }: { photos: Photo[]; onChange: (p: Photo[]) => void }) {
   const input = useRef<HTMLInputElement>(null);
+  const camera = useRef<HTMLInputElement>(null);
   const [drag, setDrag] = useState(false);
 
   const add = (files: FileList | null) => {
@@ -247,12 +251,19 @@ function PhotosStep({ photos, onChange }: { photos: Photo[]; onChange: (p: Photo
         )}
       >
         <ImagePlus className="h-10 w-10 text-plum" strokeWidth={1.4} aria-hidden />
-        <p className="mt-4 font-medium">Drag photos here</p>
-        <p className="text-sm text-muted">or</p>
-        <button type="button" onClick={() => input.current?.click()} className="mt-2 rounded-full bg-plum px-5 py-2.5 text-sm font-semibold text-ivory">
-          Choose from device
-        </button>
-        <input ref={input} type="file" accept="image/*" multiple className="sr-only" onChange={(e) => add(e.target.files)} aria-label="Upload outfit photos" />
+        <p className="mt-4 font-medium [@media(pointer:coarse)]:hidden">Drag photos here</p>
+        <p className="text-sm text-muted [@media(pointer:coarse)]:hidden">or</p>
+        <div className="mt-3 grid w-full max-w-sm gap-3 sm:grid-cols-2">
+          {/* capture opens the rear camera directly on phones; desktops fall back to a file picker */}
+          <button type="button" onClick={() => camera.current?.click()} className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-plum px-5 font-semibold text-ivory">
+            <Camera className="h-5 w-5" aria-hidden /> Take a photo
+          </button>
+          <button type="button" onClick={() => input.current?.click()} className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ivory px-5 font-semibold text-plum ring-1 ring-inset ring-plum/30">
+            <ImagePlus className="h-5 w-5" aria-hidden /> Choose from device
+          </button>
+        </div>
+        <input ref={input} type="file" accept="image/*" multiple className="sr-only" tabIndex={-1} onChange={(e) => add(e.target.files)} aria-label="Upload outfit photos" />
+        <input ref={camera} type="file" accept="image/*" capture="environment" className="sr-only" tabIndex={-1} onChange={(e) => add(e.target.files)} aria-label="Take outfit photo" />
       </div>
 
       {photos.length > 0 && (
@@ -275,7 +286,7 @@ function PhotosStep({ photos, onChange }: { photos: Photo[]; onChange: (p: Photo
                   type="button"
                   onClick={() => remove(p.id)}
                   aria-label={`Remove ${p.name}`}
-                  className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-ink/70 text-ivory transition hover:bg-plum"
+                  className="absolute right-1 top-1 grid h-11 w-11 place-items-center rounded-full bg-ink/70 text-ivory transition hover:bg-plum"
                 >
                   <Trash2 className="h-3.5 w-3.5" aria-hidden />
                 </button>
@@ -384,7 +395,7 @@ function PricingStep({ form, set }: { form: FormState; set: Setter }) {
   return (
     <div>
       <StepTitle title="Name your price." hint="You keep 85% of every rental. We handle cleaning, delivery and protection." />
-      <button type="button" onClick={suggest} className="mb-6 inline-flex items-center gap-2 rounded-full bg-gold/20 px-4 py-2 text-sm font-semibold text-ink hover:bg-gold/30">
+      <button type="button" onClick={suggest} className="mb-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-gold/20 px-4 text-sm font-semibold text-ink hover:bg-gold/30">
         <Wand2 className="h-4 w-4" aria-hidden /> Suggest prices for me
       </button>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -442,13 +453,13 @@ function AvailabilityStep({ selected, onChange }: { selected: string[]; onChange
       <StepTitle title="When is it free?" hint="Tap days your outfit can be rented. You can always block dates later." />
       <div className="rounded-[1.5rem] bg-ivory p-5 ring-1 ring-ink/5 sm:p-6">
         <div className="mb-4 flex items-center justify-between">
-          <button type="button" onClick={() => setOffset((o) => Math.max(0, o - 1))} disabled={offset === 0} aria-label="Previous month" className="grid h-10 w-10 place-items-center rounded-full hover:bg-sand disabled:opacity-30">
+          <button type="button" onClick={() => setOffset((o) => Math.max(0, o - 1))} disabled={offset === 0} aria-label="Previous month" className="grid h-11 w-11 place-items-center rounded-full hover:bg-sand disabled:opacity-30">
             <ChevronLeft className="h-5 w-5" aria-hidden />
           </button>
           <p className="font-display text-xl" aria-live="polite">
             {label}
           </p>
-          <button type="button" onClick={() => setOffset((o) => Math.min(5, o + 1))} aria-label="Next month" className="grid h-10 w-10 place-items-center rounded-full hover:bg-sand">
+          <button type="button" onClick={() => setOffset((o) => Math.min(5, o + 1))} aria-label="Next month" className="grid h-11 w-11 place-items-center rounded-full hover:bg-sand">
             <ChevronRight className="h-5 w-5" aria-hidden />
           </button>
         </div>
@@ -489,11 +500,11 @@ function AvailabilityStep({ selected, onChange }: { selected: string[]; onChange
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-sm">
           <span className="text-muted">{selected.length} days available</span>
           <div className="flex gap-2">
-            <button type="button" onClick={selectWeekends} className="rounded-full bg-sand px-4 py-2 font-medium hover:bg-blush">
+            <button type="button" onClick={selectWeekends} className="min-h-11 rounded-full bg-sand px-4 font-medium hover:bg-blush">
               All weekends this month
             </button>
             {selected.length > 0 && (
-              <button type="button" onClick={() => onChange([])} className="rounded-full px-4 py-2 font-medium text-plum hover:bg-sand">
+              <button type="button" onClick={() => onChange([])} className="min-h-11 rounded-full px-4 font-medium text-plum hover:bg-sand">
                 Clear
               </button>
             )}

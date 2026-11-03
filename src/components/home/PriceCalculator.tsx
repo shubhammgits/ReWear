@@ -62,14 +62,14 @@ export function PriceCalculator() {
           layout
           className="rounded-[2rem] bg-ivory p-6 shadow-lift ring-1 ring-ink/5 sm:p-10"
         >
-          <div role="radiogroup" aria-label="Duration unit" className="inline-flex rounded-full bg-sand p-1">
+          <div role="radiogroup" aria-label="Duration unit" className="grid w-full grid-cols-2 rounded-full bg-sand p-1 sm:inline-grid sm:w-auto">
             {(["hours", "days"] as DurationUnit[]).map((u) => (
               <button
                 key={u}
                 role="radio"
                 aria-checked={unit === u}
                 onClick={() => switchUnit(u)}
-                className={cn("relative rounded-full px-5 py-2 text-sm font-semibold capitalize transition-colors", unit === u ? "text-ivory" : "text-ink/70")}
+                className={cn("relative h-11 rounded-full px-5 text-sm font-semibold capitalize transition-colors", unit === u ? "text-ivory" : "text-ink/70")}
               >
                 {unit === u && <motion.span layoutId="calc-unit" className="absolute inset-0 -z-0 rounded-full bg-plum" />}
                 <span className="relative">By {u}</span>

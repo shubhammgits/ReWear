@@ -61,14 +61,14 @@ export function Occasions() {
 
       <div
         ref={track}
-        className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 lg:mt-14 lg:w-max lg:snap-none lg:overflow-visible lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]"
+        className="no-scrollbar mt-12 flex snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto overscroll-x-contain px-6 lg:mt-14 lg:gap-5 lg:w-max lg:snap-none lg:overflow-visible lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]"
       >
         {content.occasions.map((o, i) => (
           <Link
             key={o.name}
             href={`/browse?occasion=${encodeURIComponent(o.name)}`}
             data-cursor="Explore"
-            className="group relative aspect-[3/4] w-[72vw] shrink-0 snap-start overflow-hidden rounded-[2rem] sm:w-[42vw] lg:aspect-auto lg:h-[56vh] lg:w-[30vw] lg:max-w-[420px]"
+            className="group relative aspect-[3/4] w-[78vw] max-w-[22rem] shrink-0 snap-start overflow-hidden rounded-[2rem] sm:w-[42vw] lg:aspect-auto lg:h-[56svh] lg:w-[30vw] lg:max-w-[420px]"
           >
             <div className="absolute inset-0 overflow-hidden">
               <Image

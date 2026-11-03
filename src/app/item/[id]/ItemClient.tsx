@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { BadgeCheck, CalendarDays, ChevronLeft, Clock, MapPin, PartyPopper, Ruler, ShieldCheck, Sparkles, Star } from "lucide-react";
 import type { DurationUnit, Item, Lender, Review } from "@/lib/types";
@@ -36,6 +36,16 @@ export function ItemClient({ item, lender, reviews, similar }: { item: Item; len
   }, []);
   const [time, setTime] = useState("18:00");
   const [confirmed, setConfirmed] = useState(false);
+  // Phones: a sticky price bar that steps aside while the booking card itself is on screen
+  const bookRef = useRef<HTMLElement>(null);
+  const [bookVisible, setBookVisible] = useState(false);
+  useEffect(() => {
+    const el = bookRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setBookVisible(e.isIntersecting), { threshold: 0.15 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const q = quote(item.pricing, amount, unit, item.cleaningFee, item.deposit);
 
@@ -53,7 +63,7 @@ export function ItemClient({ item, lender, reviews, similar }: { item: Item; len
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-28 pt-28 sm:pt-32">
-      <Link href="/browse" className="mb-8 inline-flex items-center gap-1 text-sm font-medium text-ink/70 hover:text-plum">
+      <Link href="/browse" className="mb-4 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-ink/70 hover:text-plum">
         <ChevronLeft className="h-4 w-4" aria-hidden /> Back to browse
       </Link>
 
@@ -90,18 +100,18 @@ export function ItemClient({ item, lender, reviews, similar }: { item: Item; len
           </dl>
 
           {/* Booking card */}
-          <section aria-labelledby="book-title" className="mt-10 rounded-[2rem] bg-ivory p-6 shadow-lift ring-1 ring-ink/5 sm:p-8">
+          <section ref={bookRef} id="book" aria-labelledby="book-title" className="mt-10 scroll-mt-24 rounded-[2rem] bg-ivory p-6 shadow-lift ring-1 ring-ink/5 sm:p-8">
             <h2 id="book-title" className="text-2xl">
               Book your dates
             </h2>
-            <div role="radiogroup" aria-label="Rent by" className="mt-5 inline-flex rounded-full bg-sand p-1">
+            <div role="radiogroup" aria-label="Rent by" className="mt-5 grid w-full grid-cols-2 rounded-full bg-sand p-1 sm:inline-grid sm:w-auto">
               {(["hours", "days"] as DurationUnit[]).map((u) => (
                 <button
                   key={u}
                   role="radio"
                   aria-checked={unit === u}
                   onClick={() => switchUnit(u)}
-                  className={cn("relative rounded-full px-5 py-2 text-sm font-semibold", unit === u ? "text-ivory" : "text-ink/70")}
+                  className={cn("relative h-11 rounded-full px-5 text-sm font-semibold", unit === u ? "text-ivory" : "text-ink/70")}
                 >
                   {unit === u && <motion.span layoutId="item-unit" className="absolute inset-0 rounded-full bg-plum" />}
                   <span className="relative">By {u}</span>
@@ -119,7 +129,7 @@ export function ItemClient({ item, lender, reviews, similar }: { item: Item; len
                   min={today || undefined}
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="h-12 w-full rounded-2xl bg-sand/60 px-4 text-sm ring-1 ring-ink/10 focus:outline-none focus:ring-plum"
+                  className="h-12 w-full appearance-none rounded-2xl bg-sand/60 px-4 text-base ring-1 ring-ink/10 focus:outline-none focus:ring-plum"
                 />
               </label>
               <label className="block">
@@ -131,7 +141,7 @@ export function ItemClient({ item, lender, reviews, similar }: { item: Item; len
                   step={1800}
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="h-12 w-full rounded-2xl bg-sand/60 px-4 text-sm ring-1 ring-ink/10 focus:outline-none focus:ring-plum"
+                  className="h-12 w-full appearance-none rounded-2xl bg-sand/60 px-4 text-base ring-1 ring-ink/10 focus:outline-none focus:ring-plum"
                 />
               </label>
             </div>
@@ -145,7 +155,7 @@ export function ItemClient({ item, lender, reviews, similar }: { item: Item; len
                     aria-pressed={amount === n}
                     onClick={() => setAmount(n)}
                     className={cn(
-                      "rounded-full px-4 py-2 text-sm font-medium ring-1 transition",
+                      "min-h-11 rounded-full px-4 text-sm font-medium ring-1 transition",
                       amount === n ? "bg-ink text-ivory ring-ink" : "ring-ink/15 hover:ring-ink/40"
                     )}
                   >
@@ -229,6 +239,29 @@ export function ItemClient({ item, lender, reviews, similar }: { item: Item; len
           ))}
         </div>
       </section>
+
+      {/* Sticky price bar (phones) */}
+      <AnimatePresence>
+        {!bookVisible && !confirmed && (
+          <motion.div
+            initial={{ y: "110%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "110%" }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ivory/95 px-4 pt-3 backdrop-blur-xl lg:hidden"
+          >
+            <div className="mx-auto flex max-w-xl items-center justify-between gap-4">
+              <div className="min-w-0">
+                <p className="font-display text-2xl leading-none">{formatINR(q.total)}</p>
+                <p className="mt-1 truncate text-sm text-muted">for {q.label} · incl. refundable deposit</p>
+              </div>
+              <Button onClick={() => bookRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })} className="shrink-0 whitespace-nowrap" magnetic={false}>
+                Choose dates
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <Modal open={confirmed} onClose={() => setConfirmed(false)} label="Booking confirmed" className="sm:max-w-md">
         <div className="p-8 text-center sm:p-10">

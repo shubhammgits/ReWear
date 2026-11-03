@@ -12,7 +12,7 @@ export default function BrowsePage() {
   return (
     <>
       <PageHeader eyebrow="Browse" title="Find the one for tonight." intro="20 hand-picked looks from verified closets across India. Filter, sort, fall in love." />
-      <Suspense fallback={<div className="mx-auto h-[60vh] max-w-7xl px-6" />}>
+      <Suspense fallback={<div className="mx-auto h-[60svh] max-w-7xl px-6" />}>
         <BrowseClient />
       </Suspense>
     </>

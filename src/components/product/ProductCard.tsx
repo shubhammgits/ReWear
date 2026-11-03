@@ -81,7 +81,11 @@ export function ProductCard({
           <p className="mt-1 inline-flex items-center gap-1 text-sm text-muted">
             <MapPin className="h-3.5 w-3.5" aria-hidden /> {item.city}
           </p>
-          <dl className="mt-3 grid grid-cols-3 gap-1.5 text-center text-xs">
+          {/* Phones: one compact price line; the three-chip breakdown needs more width */}
+          <p className="mt-2 text-sm text-ink/80 sm:hidden">
+            from <strong className="font-semibold text-ink">{formatINR(item.pricing.per4h)}</strong> / 4 hrs
+          </p>
+          <dl className="mt-3 hidden grid-cols-3 gap-1.5 text-center text-xs sm:grid">
             {[
               ["4 hrs", item.pricing.per4h],
               ["day", item.pricing.perDay],
@@ -100,10 +104,10 @@ export function ProductCard({
         <button
           type="button"
           onClick={() => onQuickView(item)}
-          className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-ivory/95 px-3 py-1.5 text-xs font-semibold text-plum opacity-100 shadow-soft backdrop-blur transition-all duration-300 hover:bg-plum hover:text-ivory md:translate-y-1 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
+          className="absolute right-2 top-2 inline-flex h-11 w-11 items-center justify-center gap-1.5 rounded-full bg-ivory/95 text-xs font-semibold md:right-3 md:top-3 md:w-auto md:px-4 text-plum opacity-100 shadow-soft backdrop-blur transition-all duration-300 hover:bg-plum hover:text-ivory md:translate-y-1 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
           aria-label={`Quick view ${item.name}`}
         >
-          <Eye className="h-3.5 w-3.5" aria-hidden /> Quick view
+          <Eye className="h-4 w-4 md:h-3.5 md:w-3.5" aria-hidden /> <span className="hidden md:inline">Quick view</span>
         </button>
       )}
     </motion.article>

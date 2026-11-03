@@ -46,8 +46,17 @@ export function BrowseClient() {
     if (maxPrice < MAX_PRICE) sp.set("max", String(maxPrice));
     if (sort !== "popular") sp.set("sort", sort);
     const qs = sp.toString();
+    // Only touch the URL when filters actually changed (a replace on mount interrupts quick navigations)
+    if (qs === window.location.search.replace(/^\?/, "")) return;
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }, [query, occasions, sizes, city, duration, maxPrice, sort, pathname, router]);
+
+  // Lock the page behind the filter sheet (native scroll on touch would otherwise move it)
+  useEffect(() => {
+    if (!drawer) return;
+    document.documentElement.classList.add("menu-open");
+    return () => document.documentElement.classList.remove("menu-open");
+  }, [drawer]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -79,7 +88,7 @@ export function BrowseClient() {
 
   const chip = (active: boolean) =>
     cn(
-      "rounded-full px-4 py-2 text-sm font-medium ring-1 transition",
+      "min-h-11 rounded-full px-4 text-sm font-medium ring-1 transition",
       active ? "bg-plum text-ivory ring-plum" : "bg-ivory text-ink/80 ring-ink/10 hover:ring-ink/30"
     );
 
@@ -99,7 +108,7 @@ export function BrowseClient() {
         <legend className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-muted">Size</legend>
         <div className="flex flex-wrap gap-2">
           {SIZES.map((s) => (
-            <button key={s} aria-pressed={sizes.includes(s)} onClick={() => setSizes((l) => toggle(l, s))} className={cn(chip(sizes.includes(s)), "w-12 px-0")}>
+            <button key={s} aria-pressed={sizes.includes(s)} onClick={() => setSizes((l) => toggle(l, s))} className={cn(chip(sizes.includes(s)), "w-12 min-w-11 px-0")}>
               {s}
             </button>
           ))}
@@ -113,7 +122,7 @@ export function BrowseClient() {
           id="city"
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          className="h-12 w-full rounded-full bg-ivory px-5 text-sm ring-1 ring-ink/10 focus:outline-none focus:ring-plum"
+          className="h-12 w-full rounded-full bg-ivory px-5 text-base ring-1 ring-ink/10 focus:outline-none focus:ring-plum"
         >
           <option value="">All cities</option>
           {content.cities.map((c) => (
@@ -142,7 +151,7 @@ export function BrowseClient() {
         format={(v) => (v >= MAX_PRICE ? "Any" : formatINR(v))}
       />
       {activeCount > 0 && (
-        <button onClick={reset} className="text-sm font-semibold text-plum underline-offset-4 hover:underline">
+        <button onClick={reset} className="min-h-11 text-sm font-semibold text-plum underline-offset-4 hover:underline">
           Clear all filters ({activeCount})
         </button>
       )}
@@ -162,7 +171,7 @@ export function BrowseClient() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search lehenga, blazer, red, Mumbai…"
-            className="h-11 w-full rounded-full bg-transparent pl-11 pr-4 text-sm placeholder:text-muted focus:outline-none"
+            className="h-11 w-full rounded-full bg-transparent pl-11 pr-4 text-base placeholder:text-muted focus:outline-none"
           />
         </label>
         <button
@@ -178,7 +187,7 @@ export function BrowseClient() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as Sort)}
-            className="h-11 rounded-full bg-sand px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-plum"
+            className="h-11 rounded-full bg-sand px-4 text-base font-medium focus:outline-none focus:ring-2 focus:ring-plum"
             aria-label="Sort results"
           >
             <option value="popular">Most popular</option>
@@ -241,11 +250,11 @@ export function BrowseClient() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 280, damping: 32 }}
-              className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-[2rem] bg-ivory p-6"
+              className="absolute inset-x-0 bottom-0 max-h-[85dvh] overflow-y-auto overscroll-contain rounded-t-[2rem] bg-ivory p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]"
             >
               <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-2xl">Filters</h2>
-                <button onClick={() => setDrawer(false)} aria-label="Close filters" className="grid h-10 w-10 place-items-center rounded-full bg-sand">
+                <button onClick={() => setDrawer(false)} aria-label="Close filters" className="grid h-11 w-11 place-items-center rounded-full bg-sand">
                   <X className="h-4 w-4" aria-hidden />
                 </button>
               </div>
