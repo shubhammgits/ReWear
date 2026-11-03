@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
+import { MotionConfig } from "framer-motion";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/utils";
 
@@ -15,9 +16,23 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const first = useRef(true);
 
+  // Trigger positions depend on final layout: re-measure once web fonts and late images have landed
   useEffect(() => {
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    if (prefersReducedMotion() || coarse) return; // native scroll on touch + reduced motion
+    let cancelled = false;
+    const refresh = () => !cancelled && ScrollTrigger.refresh();
+    document.fonts?.ready.then(refresh);
+    if (document.readyState === "complete") refresh();
+    else window.addEventListener("load", refresh, { once: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener("load", refresh);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Native scroll on touch (momentum, address-bar behaviour) and for reduced motion
+    const touch = window.matchMedia("(pointer: coarse), (hover: none)").matches;
+    if (prefersReducedMotion() || touch) return;
 
     const instance = new Lenis({ duration: 1.15, smoothWheel: true });
     instance.on("scroll", ScrollTrigger.update);
@@ -46,5 +61,10 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     return () => window.clearTimeout(id);
   }, [pathname, lenis]);
 
-  return <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>;
+  return (
+    <LenisContext.Provider value={lenis}>
+      {/* "user": with reduced motion, Framer drops transform/layout animation and keeps simple fades */}
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </LenisContext.Provider>
+  );
 }

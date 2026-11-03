@@ -7,6 +7,7 @@ import { motion, useMotionValue, useSpring, useReducedMotion, useTransform } fro
 import { Eye, MapPin, Star } from "lucide-react";
 import type { Item } from "@/lib/types";
 import { formatINR, img } from "@/lib/utils";
+import { useFinePointer } from "@/lib/useFinePointer";
 
 export function ProductCard({
   item,
@@ -19,6 +20,8 @@ export function ProductCard({
 }) {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
+  const fine = useFinePointer();
+  const tilt = fine && !reduce;
   const px = useMotionValue(0.5);
   const py = useMotionValue(0.5);
   const rotateX = useSpring(useTransform(py, [0, 1], [7, -7]), { stiffness: 200, damping: 20 });
@@ -26,7 +29,7 @@ export function ProductCard({
   const glare = useTransform(px, (g) => `radial-gradient(circle at ${g * 100}% 20%, rgba(255,255,255,0.28), transparent 55%)`);
 
   const onMove = (e: React.PointerEvent) => {
-    if (reduce || e.pointerType !== "mouse" || !ref.current) return;
+    if (!tilt || e.pointerType !== "mouse" || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
     px.set((e.clientX - r.left) / r.width);
     py.set((e.clientY - r.top) / r.height);
@@ -39,9 +42,10 @@ export function ProductCard({
   return (
     <motion.article
       ref={ref}
-      onPointerMove={onMove}
-      onPointerLeave={reset}
-      style={{ rotateX, rotateY, transformPerspective: 900 }}
+      // Touch: no 3D transform at all, so scrolling past cards never tilts or re-layers them
+      onPointerMove={tilt ? onMove : undefined}
+      onPointerLeave={tilt ? reset : undefined}
+      style={tilt ? { rotateX, rotateY, transformPerspective: 900 } : undefined}
       className="group relative"
     >
       <Link href={`/item/${item.id}`} className="block rounded-[var(--radius-card)]" data-cursor="View">
@@ -104,7 +108,7 @@ export function ProductCard({
         <button
           type="button"
           onClick={() => onQuickView(item)}
-          className="absolute right-2 top-2 inline-flex h-11 w-11 items-center justify-center gap-1.5 rounded-full bg-ivory/95 text-xs font-semibold md:right-3 md:top-3 md:w-auto md:px-4 text-plum opacity-100 shadow-soft backdrop-blur transition-all duration-300 hover:bg-plum hover:text-ivory md:translate-y-1 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:focus-visible:opacity-100"
+          className="absolute right-2 top-2 inline-flex h-11 w-11 items-center justify-center gap-1.5 rounded-full bg-ivory/95 text-xs font-semibold md:right-3 md:top-3 md:w-auto md:px-4 text-plum opacity-100 shadow-soft backdrop-blur transition-all duration-300 hover:bg-plum hover:text-ivory pointer-fine:translate-y-1 pointer-fine:opacity-0 pointer-fine:group-hover:translate-y-0 pointer-fine:group-hover:opacity-100 pointer-fine:focus-visible:opacity-100"
           aria-label={`Quick view ${item.name}`}
         >
           <Eye className="h-4 w-4 md:h-3.5 md:w-3.5" aria-hidden /> <span className="hidden md:inline">Quick view</span>

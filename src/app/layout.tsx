@@ -37,6 +37,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IN" className={`${fraunces.variable} ${dmSans.variable}`}>
+      <head>
+        {/* Without JS the scroll reveals never run: show their end state instead of hidden text */}
+        <noscript>
+          <style>{`[style*="opacity:0"]{opacity:1!important}[style*="translateY("],[style*="translateX("]{transform:none!important}`}</style>
+        </noscript>
+      </head>
       <body>
         <SmoothScroll>
           <Header />

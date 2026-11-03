@@ -18,6 +18,9 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Mouse/trackpad only: hover-reveal UI must stay visible on touch screens of any width */
+@custom-variant pointer-fine (@media (hover: hover) and (pointer: fine));
+
 @theme inline {
   --color-ivory: var(--ivory);
   --color-ink: var(--ink);

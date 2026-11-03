@@ -52,10 +52,10 @@ const garments = [
 
 const input = { x: 0, y: 0, scroll: 0, velocity: 0 };
 
-function Garment({ url, position, scale, seed }: { url: string; position: readonly number[]; scale: number; seed: number }) {
+function Garment({ url, position, scale, seed, lite }: { url: string; position: readonly number[]; scale: number; seed: number; lite: boolean }) {
   const texture = useTexture(url);
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 4;
+  texture.anisotropy = lite ? 1 : 4;
   const mesh = useRef<THREE.Group>(null);
   const uniforms = useMemo(
     () => ({ uTime: { value: 0 }, uSeed: { value: seed }, uWind: { value: 0 }, uMap: { value: texture } }),
@@ -84,14 +84,14 @@ function Garment({ url, position, scale, seed }: { url: string; position: readon
         <meshBasicMaterial color="#C9A24B" />
       </mesh>
       <mesh>
-        <planeGeometry args={[1.5, 1.95, 28, 36]} />
+        <planeGeometry args={lite ? [1.5, 1.95, 14, 18] : [1.5, 1.95, 28, 36]} />
         <shaderMaterial vertexShader={vertex} fragmentShader={fragment} uniforms={uniforms} transparent side={THREE.DoubleSide} />
       </mesh>
     </group>
   );
 }
 
-function Rig() {
+function Rig({ lite }: { lite: boolean }) {
   const group = useRef<THREE.Group>(null);
   const { viewport } = useThree();
   const compact = viewport.aspect < 1;
@@ -107,8 +107,8 @@ function Rig() {
 
   return (
     <group ref={group} scale={compact ? 0.68 : 1}>
-      {garments.map((g) => (
-        <Garment key={g.id} url={img(g.id, 640)} position={g.pos} scale={g.scale} seed={g.seed} />
+      {(lite ? garments.slice(0, 3) : garments).map((g) => (
+        <Garment key={g.id} url={img(g.id, lite ? 400 : 640)} position={g.pos} scale={g.scale} seed={g.seed} lite={lite} />
       ))}
     </group>
   );
@@ -117,6 +117,8 @@ function Rig() {
 export default function HeroScene() {
   const wrap = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(true);
+  // Phones and touch tablets: 3 garments, coarser cloth mesh, 1x pixel ratio, no MSAA
+  const [lite] = useState(() => window.matchMedia("(max-width: 767px), (pointer: coarse)").matches);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -146,11 +148,11 @@ export default function HeroScene() {
     <div ref={wrap} className="absolute inset-0" aria-hidden>
       <Canvas
         frameloop={active ? "always" : "never"}
-        dpr={[1, 1.5]}
+        dpr={lite ? 1 : [1, 1.5]}
         camera={{ position: [0, 0, 5.2], fov: 45 }}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        gl={{ antialias: !lite, alpha: true, powerPreference: lite ? "default" : "high-performance" }}
       >
-        <Rig />
+        <Rig lite={lite} />
       </Canvas>
     </div>
   );

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useFinePointer } from "@/lib/useFinePointer";
 
 type Variant = "primary" | "secondary" | "ghost" | "gold";
 
@@ -42,11 +43,13 @@ export function Button({
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const fine = useFinePointer();
+  const pull = magnetic && fine && !reduce;
   const x = useSpring(useMotionValue(0), { stiffness: 220, damping: 15, mass: 0.4 });
   const y = useSpring(useMotionValue(0), { stiffness: 220, damping: 15, mass: 0.4 });
 
   const onMove = (e: React.PointerEvent) => {
-    if (!magnetic || reduce || e.pointerType !== "mouse" || !ref.current) return;
+    if (!pull || e.pointerType !== "mouse" || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
     x.set((e.clientX - (r.left + r.width / 2)) * 0.3);
     y.set((e.clientY - (r.top + r.height / 2)) * 0.4);
@@ -66,7 +69,14 @@ export function Button({
   const inner = <span className="relative z-10 inline-flex items-center gap-2">{children}</span>;
 
   return (
-    <motion.div ref={ref} onPointerMove={onMove} onPointerLeave={reset} style={{ x, y }} className="inline-block">
+    // Touch: no pointer handlers and no transform, so taps never nudge the button
+    <motion.div
+      ref={ref}
+      onPointerMove={pull ? onMove : undefined}
+      onPointerLeave={pull ? reset : undefined}
+      style={pull ? { x, y } : undefined}
+      className="inline-block"
+    >
       {href ? (
         <Link href={href} className={cls} aria-label={ariaLabel}>
           {inner}

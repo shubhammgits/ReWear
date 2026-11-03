@@ -170,7 +170,7 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
                     />
                   </motion.div>
                 </AnimatePresence>
-                <span className="pointer-events-none absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-ivory/90 px-3 py-1.5 text-xs font-medium backdrop-blur">
+                <span className="pointer-events-none absolute bottom-4 left-4 hidden items-center pointer-fine:inline-flex gap-1.5 rounded-full bg-ivory/90 px-3 py-1.5 text-xs font-medium backdrop-blur">
                   <ZoomIn className="h-3.5 w-3.5" aria-hidden /> Hover to zoom
                 </span>
               </div>
