@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
     // upstream fetch timeouts on slow connections. Production keeps AVIF/WebP optimisation.
     unoptimized: process.env.NODE_ENV === "development",
     formats: ["image/avif", "image/webp"],
+    // Widths that match real layouts (phones 360–430 @2–3x, tablets, desktop) instead of the
+    // default ladder up to 3840px; small sizes cover avatars, thumbs and the closet cards
+    deviceSizes: [360, 414, 640, 750, 828, 1080, 1280, 1920],
+    imageSizes: [48, 96, 128, 256, 384],
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
   },
   experimental: {

@@ -8,8 +8,10 @@ import { HeroVisual } from "@/components/three/HeroVisual";
 
 export function Hero() {
   const reduce = useReducedMotion();
-  const fade = (delay: number) => ({
-    initial: { opacity: 0, y: reduce ? 0 : 16 },
+  // `slide` skips the opacity fade: the intro paragraph is the mobile LCP element, and an
+  // opacity-0 start delays LCP until hydration and the fade finish on slow phones
+  const fade = (delay: number, slide = false) => ({
+    initial: { opacity: slide ? 1 : 0, y: reduce ? 0 : 16 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] as const },
   });
@@ -35,7 +37,7 @@ export function Hero() {
             <RevealText as="span" text="Own less." immediate className="block italic text-plum" delay={0.35} />
           </h1>
 
-          <motion.p {...fade(0.6)} className="mt-7 max-w-md text-lg leading-relaxed text-ink/70">
+          <motion.p {...fade(0.6, true)} className="mt-7 max-w-md text-lg leading-relaxed text-ink/70">
             Rent stunning outfits from real closets near you for a few hours or a few days. Or turn the ones you rarely wear into
             monthly income.
           </motion.p>

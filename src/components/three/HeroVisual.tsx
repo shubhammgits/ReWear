@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Component, Suspense, useEffect, useState } from "react";
-import { img, isLowEndDevice } from "@/lib/utils";
+import { BLUR, img, isLowEndDevice } from "@/lib/utils";
 
 const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false, loading: () => <Collage /> });
 
@@ -32,7 +32,7 @@ function Collage() {
           className={`absolute aspect-[3/4] overflow-hidden rounded-[1.75rem] shadow-lift ring-4 ring-ivory ${s.cls}`}
           style={{ animation: `float ${6 + i}s ease-in-out ${i * 0.6}s infinite alternate` }}
         >
-          <Image src={img(s.id, 600)} alt={s.alt} fill priority={i === 1} sizes="(min-width: 1024px) 18vw, 36vw" className="object-cover" />
+          <Image src={img(s.id, 600)} alt={s.alt} fill priority={i === 1} placeholder="blur" blurDataURL={BLUR} sizes="(min-width: 1024px) 18vw, 36vw" className="object-cover" />
         </div>
       ))}
       <style>{`@keyframes float { to { transform: translateY(-14px) } }`}</style>
@@ -42,13 +42,15 @@ function Collage() {
 
 /**
  * Shows the static collage first (fast LCP), then swaps in WebGL once the
- * browser is idle — but never on low-end devices or with reduced motion.
+ * browser is idle — but never on phones, low-end devices or with reduced motion.
+ * On a 4×-throttled phone the three.js chunk + shader compile blocked the main
+ * thread for ~2.5s; phones keep the floating collage instead.
  */
 export function HeroVisual() {
   const [use3D, setUse3D] = useState(false);
 
   useEffect(() => {
-    if (isLowEndDevice()) return;
+    if (isLowEndDevice() || window.matchMedia("(max-width: 767px)").matches) return;
     const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
     const start = () => setUse3D(true);
     if (w.requestIdleCallback) {

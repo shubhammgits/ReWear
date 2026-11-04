@@ -6,7 +6,7 @@ import { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { content } from "@/lib/api";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { img } from "@/lib/utils";
+import { BLUR, img } from "@/lib/utils";
 import { Eyebrow, RevealText } from "@/components/ui/Reveal";
 
 /** Desktop: vertical scroll drives a pinned horizontal track with inner-image parallax. Mobile: native swipe. */
@@ -75,7 +75,10 @@ export function Occasions() {
                 src={img(o.image, 900)}
                 alt={o.alt}
                 fill
-                sizes="(min-width: 1024px) 30vw, 72vw"
+                placeholder="blur"
+                blurDataURL={BLUR}
+                // Cards are 78vw / 42vw / 30vw; the 1.3× parallax overscan is covered by the next width step
+                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 42vw, 78vw"
                 className="occ-img scale-[1.3] object-cover transition-[filter] duration-700 group-hover:brightness-110"
               />
             </div>

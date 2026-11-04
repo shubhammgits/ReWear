@@ -1,17 +1,21 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import type { Item } from "@/lib/types";
 import { allItems } from "@/lib/api";
 import { ProductCard } from "@/components/product/ProductCard";
-import { QuickView } from "@/components/product/QuickView";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow, RevealText } from "@/components/ui/Reveal";
 
+// Only needed after a tap on "Quick view": keep the modal out of the page's first-load JS
+const QuickView = dynamic(() => import("@/components/product/QuickView").then((m) => m.QuickView), { ssr: false });
+
 export function Featured() {
-  const [quick, setQuick] = useState<Item | null>(null);
+  // undefined until the first Quick view tap, so the modal chunk only loads on demand
+  const [quick, setQuick] = useState<Item | null | undefined>(undefined);
   const items = allItems().filter((i) => i.featured);
 
   return (
@@ -41,7 +45,7 @@ export function Featured() {
           ))}
         </div>
       </div>
-      <QuickView item={quick} onClose={() => setQuick(null)} />
+      {quick !== undefined && <QuickView item={quick} onClose={() => setQuick(null)} />}
     </section>
   );
 }

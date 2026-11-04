@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useTexture } from "@react-three/drei";
+// Fiber's own loader instead of drei's useTexture keeps drei (and three-stdlib) out of the hero chunk
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { img } from "@/lib/utils";
 
@@ -53,7 +53,7 @@ const garments = [
 const input = { x: 0, y: 0, scroll: 0, velocity: 0 };
 
 function Garment({ url, position, scale, seed, lite }: { url: string; position: readonly number[]; scale: number; seed: number; lite: boolean }) {
-  const texture = useTexture(url);
+  const texture = useLoader(THREE.TextureLoader, url);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = lite ? 1 : 4;
   const mesh = useRef<THREE.Group>(null);

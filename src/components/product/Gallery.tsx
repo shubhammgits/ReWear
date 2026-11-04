@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Box, Images, ZoomIn } from "lucide-react";
-import { cn, img } from "@/lib/utils";
+import { BLUR, cn, img } from "@/lib/utils";
 
 const ItemViewer3D = dynamic(() => import("@/components/three/ItemViewer3D"), {
   ssr: false,
@@ -73,6 +73,8 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
                   alt={i === 0 ? alt : `${alt}, photo ${i + 1}`}
                   fill
                   priority={i === 0}
+                  placeholder="blur"
+                  blurDataURL={BLUR}
                   sizes="(min-width: 1024px) 1px, 100vw"
                   className="object-cover"
                 />
@@ -164,6 +166,8 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
                       alt={alt}
                       fill
                       priority={active === 0}
+                      placeholder="blur"
+                      blurDataURL={BLUR}
                       sizes="(min-width: 1024px) 45vw, 1px"
                       className="object-cover transition-transform duration-200 ease-out"
                       style={zoom ? { transform: "scale(2)", transformOrigin: `${zoom.x}% ${zoom.y}%` } : undefined}

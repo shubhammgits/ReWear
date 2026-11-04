@@ -1,0 +1,13 @@
+{
+  "label": "lab, Playwright",
+  "method": "Chromium, 390x844 mobile emulation, 4x CPU throttle, Slow-4G (CDP), median of 3 cold loads. LCP/CLS via PerformanceObserver, TBT = sum of (longtask - 50ms) until load + 5s. Both sides are local production builds (next start): Vercel previews are behind SSO, so they can't be measured. Single-machine timings are noisy (about +/-15%).",
+  "before": { "build": "stage-4 (commit 1b7d5f7)",
+    "home":   { "fcp": 1908, "lcp": 10424, "cls": 0, "tbt": 4240, "kb": 865 },
+    "item":   { "fcp": 1596, "lcp": 2156,  "cls": 0, "tbt": 1155, "kb": 859 },
+    "browse": { "fcp": 1112, "lcp": 4704,  "cls": 0, "tbt": 1476, "kb": 835 } },
+  "after": { "build": "stage-5 (this commit)",
+    "home":   { "fcp": 2188, "lcp": 2188, "cls": 0, "tbt": 2514, "kb": 700, "note": "an earlier run of the same code gave TBT 1790" },
+    "item":   { "fcp": 1812, "lcp": 2480, "cls": 0, "tbt": 1308, "kb": 692, "note": "an earlier run gave LCP 2188 / TBT 978; one outlier load had TBT 5974" },
+    "browse": { "fcp": 1528, "lcp": 1584, "cls": 0, "tbt": 1387, "kb": 719 } },
+  "live_baseline": { "url": "https://rewear-kohl-nine.vercel.app/", "home": { "fcp": 2784, "lcp": 2784, "tbt": 3897, "kb": 856 }, "file": "qa/perf-before.json" }
+}

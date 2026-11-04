@@ -6,7 +6,7 @@ import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion, useTransform } from "framer-motion";
 import { Eye, MapPin, Star } from "lucide-react";
 import type { Item } from "@/lib/types";
-import { formatINR, img } from "@/lib/utils";
+import { BLUR, formatINR, img } from "@/lib/utils";
 import { useFinePointer } from "@/lib/useFinePointer";
 
 export function ProductCard({
@@ -55,6 +55,8 @@ export function ProductCard({
             alt={item.imageAlt}
             fill
             priority={priority}
+            placeholder="blur"
+            blurDataURL={BLUR}
             sizes="(min-width: 1280px) 22vw, (min-width: 768px) 33vw, 50vw"
             className="object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.06]"
           />

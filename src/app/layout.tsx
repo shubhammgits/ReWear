@@ -10,7 +10,8 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   display: "swap",
-  axes: ["opsz", "SOFT"],
+  // opsz drives font-optical-sizing; the unused SOFT axis added ~100KB of font data
+  axes: ["opsz"],
   style: ["normal", "italic"],
 });
 

@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -8,8 +9,10 @@ import { OCCASIONS, SIZES, allItems, content } from "@/lib/api";
 import type { Item, OccasionName, Size } from "@/lib/types";
 import { cn, formatINR } from "@/lib/utils";
 import { ProductCard } from "@/components/product/ProductCard";
-import { QuickView } from "@/components/product/QuickView";
 import { Slider } from "@/components/ui/Slider";
+
+// Only needed after a tap on "Quick view": keep the modal out of the page's first-load JS
+const QuickView = dynamic(() => import("@/components/product/QuickView").then((m) => m.QuickView), { ssr: false });
 
 type Duration = "4h" | "day" | "3days";
 type Sort = "popular" | "price-asc" | "price-desc" | "rating";
@@ -18,8 +21,16 @@ const durationLabel: Record<Duration, string> = { "4h": "4 hours", day: "1 day",
 const priceFor = (i: Item, d: Duration) => (d === "4h" ? i.pricing.per4h : d === "day" ? i.pricing.perDay : i.pricing.per3Days);
 const MAX_PRICE = 5000;
 
-export function BrowseClient() {
-  const params = useSearchParams();
+type Initial = Record<string, string>;
+
+/** Reads the URL filters once the client has them; see the Suspense fallback in page.tsx. */
+export function BrowseFromURL() {
+  // Seeds state once, like before; later URL updates come from the component's own filter changes
+  return <BrowseClient initial={Object.fromEntries(useSearchParams().entries())} />;
+}
+
+export function BrowseClient({ initial }: { initial: Initial }) {
+  const params = { get: (k: string): string | null => initial[k] ?? null };
   const router = useRouter();
   const pathname = usePathname();
 
@@ -32,7 +43,8 @@ export function BrowseClient() {
   const [duration, setDuration] = useState<Duration>((params.get("d") as Duration) || "day");
   const [maxPrice, setMaxPrice] = useState(Number(params.get("max")) || MAX_PRICE);
   const [sort, setSort] = useState<Sort>((params.get("sort") as Sort) || "popular");
-  const [quick, setQuick] = useState<Item | null>(null);
+  // undefined until the first Quick view tap, so the modal chunk only loads on demand
+  const [quick, setQuick] = useState<Item | null | undefined>(undefined);
   const [drawer, setDrawer] = useState(false);
 
   // Keep the URL shareable
@@ -208,7 +220,8 @@ export function BrowseClient() {
             {results.length} {results.length === 1 ? "look" : "looks"} · prices shown per {durationLabel[duration]}
           </p>
           <motion.ul layout className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:gap-x-6">
-            <AnimatePresence mode="popLayout">
+            {/* initial={false}: the first grid paints as-is (it's the page's LCP); only filter changes animate */}
+            <AnimatePresence mode="popLayout" initial={false}>
               {results.map((item, i) => (
                 <motion.li
                   key={item.id}
@@ -218,7 +231,7 @@ export function BrowseClient() {
                   exit={{ opacity: 0, scale: 0.94 }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: Math.min(i, 8) * 0.03 }}
                 >
-                  <ProductCard item={item} onQuickView={setQuick} priority={i < 3} />
+                  <ProductCard item={item} onQuickView={setQuick} priority={i < 2} />
                 </motion.li>
               ))}
             </AnimatePresence>
@@ -267,7 +280,7 @@ export function BrowseClient() {
         )}
       </AnimatePresence>
 
-      <QuickView item={quick} onClose={() => setQuick(null)} />
+      {quick !== undefined && <QuickView item={quick} onClose={() => setQuick(null)} />}
     </div>
   );
 }
