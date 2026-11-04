@@ -50,7 +50,7 @@ export function Occasions() {
   );
 
   return (
-    <section ref={root} className="relative overflow-hidden bg-plum py-24 text-ivory lg:flex lg:h-[100svh] lg:flex-col lg:justify-center lg:py-0" aria-labelledby="occ-title">
+    <section ref={root} className="surface-dark relative overflow-hidden bg-plum py-24 text-ivory lg:flex lg:h-[100svh] lg:flex-col lg:justify-center lg:py-0" aria-labelledby="occ-title">
       <div className="mx-auto w-full max-w-7xl px-6">
         <Eyebrow light>Shop by occasion</Eyebrow>
         <div className="flex flex-wrap items-end justify-between gap-6">
@@ -68,7 +68,7 @@ export function Occasions() {
             key={o.name}
             href={`/browse?occasion=${encodeURIComponent(o.name)}`}
             data-cursor="Explore"
-            className="group relative aspect-[3/4] w-[78vw] max-w-[22rem] shrink-0 snap-start overflow-hidden rounded-[2rem] sm:w-[42vw] lg:aspect-auto lg:h-[56svh] lg:w-[30vw] lg:max-w-[420px]"
+            className="group relative aspect-[3/4] max-h-[80svh] w-[78vw] max-w-[22rem] shrink-0 snap-start overflow-hidden rounded-[2rem] sm:w-[42vw] lg:aspect-auto lg:h-[56svh] lg:w-[30vw] lg:max-w-[420px]"
           >
             <div className="absolute inset-0 overflow-hidden">
               <Image

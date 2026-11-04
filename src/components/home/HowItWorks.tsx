@@ -101,7 +101,7 @@ export function HowItWorks() {
                     <s.icon className="h-7 w-7 text-plum" strokeWidth={1.5} aria-hidden />
                   </div>
                   <div className="min-w-0 flex-1 rounded-[var(--radius-card)] bg-ivory p-5 sm:mt-6 sm:h-full sm:p-6 shadow-soft ring-1 ring-ink/5 transition-transform duration-500 hover:-translate-y-1">
-                    <span className="font-display text-4xl text-gold/70 sm:text-5xl">0{i + 1}</span>
+                    <span className="font-display text-4xl text-gold-deep sm:text-5xl">0{i + 1}</span>
                     <h3 className="mt-3 text-2xl">{s.title}</h3>
                     <p className="mt-3 text-[15px] leading-relaxed text-ink/70">{s.text}</p>
                   </div>

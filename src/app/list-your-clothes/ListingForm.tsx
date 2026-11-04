@@ -146,7 +146,7 @@ export function ListingForm() {
                 <motion.span className="block h-full bg-plum" initial={false} animate={{ width: i < step ? "100%" : i === step ? "50%" : "0%" }} transition={{ duration: 0.5 }} />
               </span>
               <span className={cn("mt-2 flex min-w-0 items-center gap-1.5 text-xs font-semibold sm:text-sm", i <= step ? "text-ink" : "text-muted")}>
-                {i < step ? <Check className="h-3.5 w-3.5 shrink-0 text-plum" aria-hidden /> : <span className="text-gold">0{i + 1}</span>}
+                {i < step ? <Check className="h-3.5 w-3.5 shrink-0 text-plum" aria-hidden /> : <span className="text-gold-deep">0{i + 1}</span>}
                 {/* Phones show only the current step's name */}
                 <span className={cn("truncate", i !== step && "sr-only sm:not-sr-only")}>{s}</span>
               </span>
@@ -418,7 +418,7 @@ function PricingStep({ form, set }: { form: FormState; set: Setter }) {
           </label>
         ))}
       </div>
-      <p className="mt-6 rounded-2xl bg-plum p-5 text-ivory">
+      <p className="surface-dark mt-6 rounded-2xl bg-plum p-5 text-ivory">
         At 3 day-rentals a month you&apos;d earn <strong className="text-gold">{formatINR(form.perDay * 3 * (1 - PLATFORM_CUT))}</strong>. Not bad for
         something that was sitting in a cupboard.
       </p>

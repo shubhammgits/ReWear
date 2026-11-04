@@ -17,7 +17,7 @@ export function EarnSection() {
   const monthly = lenderEarnings(items, rentals, price);
 
   return (
-    <section className="relative overflow-hidden bg-ink py-28 text-ivory sm:py-36" aria-labelledby="earn-title">
+    <section className="surface-dark relative overflow-hidden bg-ink py-28 text-ivory sm:py-36" aria-labelledby="earn-title">
       <div aria-hidden className="absolute -right-32 top-0 h-[500px] w-[500px] rounded-full bg-plum/60 blur-3xl" />
       <div className="relative mx-auto grid max-w-7xl gap-16 px-6 lg:grid-cols-2 lg:items-center">
         <div>
@@ -56,7 +56,7 @@ export function EarnSection() {
                   {formatINR(monthly)}
                   <span className="font-sans text-base text-ivory/60"> /month</span>
                 </p>
-                <p className="mt-1 text-xs text-ivory/50">
+                <p className="mt-1 text-xs text-ivory/70">
                   {items} × {rentals} × {formatINR(price)}, after our 15% fee
                 </p>
               </div>

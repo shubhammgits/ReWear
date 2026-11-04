@@ -32,7 +32,7 @@ export function Hero() {
             Rent by the hour. Lend by the day.
           </motion.p>
 
-          <h1 id="hero-title" className="font-display text-[clamp(2.75rem,11vw,7.5rem)] font-medium leading-[0.92] tracking-[-0.035em]">
+          <h1 id="hero-title" className="font-display text-[clamp(2.75rem,min(11vw,17svh),7.5rem)] font-medium leading-[0.92] tracking-[-0.035em]">
             <RevealText as="span" text="Wear more." immediate className="block" delay={0.15} />
             <RevealText as="span" text="Own less." immediate className="block italic text-plum" delay={0.35} />
           </h1>

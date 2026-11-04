@@ -8,7 +8,7 @@ const words = ["Lehengas", "Tuxedos", "Sarees", "Slip dresses", "Sherwanis", "Bl
 
 export function FinalCTA() {
   return (
-    <section className="relative overflow-hidden bg-plum py-28 text-ivory sm:py-40" aria-labelledby="cta-title">
+    <section className="surface-dark relative overflow-hidden bg-plum py-28 text-ivory sm:py-40" aria-labelledby="cta-title">
       <div aria-hidden className="absolute inset-x-0 top-8 overflow-hidden opacity-20">
         <div className="marquee flex w-max gap-10 whitespace-nowrap font-display text-6xl italic sm:text-8xl">
           {[...words, ...words].map((w, i) => (

@@ -46,7 +46,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative overflow-hidden bg-ink text-ivory">
+    <footer className="surface-dark relative overflow-hidden bg-ink text-ivory">
       <div className="mx-auto grid max-w-7xl gap-14 px-6 pb-10 pt-20 lg:grid-cols-[1.3fr_2fr]">
         <div>
           <Logo className="text-ivory [&_span:first-child]:text-blush" />
@@ -69,7 +69,7 @@ export function Footer() {
                 placeholder="you@email.com"
                 aria-invalid={state === "error"}
                 aria-describedby="newsletter-msg"
-                className="h-11 min-w-0 flex-1 bg-transparent px-4 text-base text-ivory placeholder:text-ivory/40 focus:outline-none"
+                className="h-11 min-w-0 flex-1 bg-transparent px-4 text-base text-ivory placeholder:text-ivory/60 focus:outline-none"
               />
               <button type="submit" className="inline-flex h-11 shrink-0 items-center gap-1 rounded-full bg-gold px-5 text-sm font-semibold text-ink transition hover:brightness-110">
                 Join <ArrowRight className="h-4 w-4" aria-hidden />
@@ -111,7 +111,7 @@ export function Footer() {
       <p aria-hidden className="pointer-events-none select-none whitespace-nowrap text-center font-display text-[22vw] leading-[0.8] text-ivory/[0.04]">
         ReWear
       </p>
-      <div className="mx-auto flex max-w-7xl flex-col gap-2 border-t border-ivory/10 px-6 pb-28 pt-6 text-xs md:pb-6 text-ivory/50 sm:flex-row sm:justify-between">
+      <div className="mx-auto flex max-w-7xl flex-col gap-2 border-t border-ivory/10 px-6 pb-28 pt-6 text-xs md:pb-6 text-ivory/60 sm:flex-row sm:justify-between">
         <p>© {new Date().getFullYear()} ReWear Technologies. Made with love (and lots of chai) in India.</p>
         <p>Images via Unsplash · Demo build with mock data</p>
       </div>

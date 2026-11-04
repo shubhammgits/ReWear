@@ -162,7 +162,7 @@ export function Dashboard() {
               ))}
             </div>
 
-            <div className="rounded-[2rem] bg-ink p-6 text-ivory sm:p-10">
+            <div className="surface-dark rounded-[2rem] bg-ink p-6 text-ivory sm:p-10">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h2 className="text-2xl">Monthly earnings</h2>
                 <p className="text-sm text-ivory/60">After ReWear&apos;s 15% fee</p>
