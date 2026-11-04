@@ -42,7 +42,47 @@ Every stage passed `npm run lint`, `npm run typecheck` and `npm run build`. Ever
 
 ## Performance (lab, Playwright)
 
-Setup: Chromium at 390x844 with mobile emulation, 4x CPU throttle, Slow-4G, cold cache, median of 3. PSI wasn't used; the anonymous quota was exhausted, and no key was provided.
+Setup: Chromium at 390x844 with mobile emulation, 4x CPU throttle, Slow-4G, cold cache. PSI wasn't used; the anonymous quota was exhausted, and no key was provided.
+
+### Final before → after (interleaved A/B, the numbers to trust)
+
+**Before** is the original `main` (`1b23d25`). **After** is the shipped code (`3567792`).
+
+How it was measured:
+- Both builds were served locally and loaded alternately, one load at a time, with the order swapped every round. 5 rounds per page; medians are reported.
+- Interleaving was needed because this machine's speed drifted during the session. The same unchanged build measured 2.2s at one point and 2.0–4.5s at another, so runs taken hours apart can't be compared.
+- **"First photo"** is when the first on-screen photo is decoded and not faded out, i.e. what a visitor actually sees.
+- Data: `qa/perf-final.json`. Script: `qa/perf-ab.template.js`.
+
+| Page | Metric | Before | After |
+| --- | --- | --- | --- |
+| Home | LCP | 7.8 s | **2.0 s** |
+| Home | First photo | 3.2 s | **2.0 s** |
+| Home | FCP | 2.7 s | **2.0 s** |
+| Home | TBT* | 4.9 s | **3.0 s** |
+| Home | Transfer | 1106 KB | **700 KB** |
+| Browse | First photo | 8.7 s | **3.8 s** (every after run beat every before run) |
+| Browse | LCP | 3.7 s | 4.2 s (see note) |
+| Browse | Transfer | 823 KB | **719 KB** |
+| Item | LCP | 7.8 s | **3.3 s** (every after run beat every before run) |
+| Item | TBT* | 2.5 s | 3.2 s (overlapping ranges, so noise) |
+| Item | Transfer | 826 KB | **692 KB** |
+
+CLS is 0 everywhere.
+
+Notes:
+- **Browse LCP:** the original's figure flatters it. Its grid fades in from opacity 0 after hydration, and Chrome never reports those photos as LCP, so the metric stops at the page heading. "First photo" is the fair comparison.
+- **Blocking time (TBT):** on this throttled machine it ranges about ±2 s between identical runs. Only home shows a clear TBT improvement.
+
+### Live production, after the merge
+
+Home: LCP 5.3–5.8 s, TBT 5.1–6.7 s, 674–690 KB.
+
+These runs fell in the machine's slow phase, so they can't be compared with the live "before" baseline below (2.8 s, taken hours earlier).
+- Vercel isn't the bottleneck: HTML arrives by about 0.4 s and CSS by about 1.5 s, and the remaining time is main-thread work on the throttled CPU.
+- Use the interleaved table above for before/after. Run real PSI (with an API key) or test on a phone for absolute production numbers.
+
+### Per-stage measurements (taken during the stages, kept for history)
 
 | Home | LCP | TBT* | Transfer | CLS |
 | --- | --- | --- | --- | --- |
@@ -79,6 +119,7 @@ Caveats:
 5. **Not tested on a real iPhone.** All WebKit results are Playwright's WebKit build on Windows. Headless WebKit renders at about 4 fps, so some audit shots catch animations mid-way; settled re-shots are noted per stage. Use the checklist below on a device.
 6. **The gold "." in the logo is 2.3:1.** Logotypes are exempt from WCAG contrast rules; it was left as brand.
 7. **Vercel previews need a login.** Preview performance couldn't be measured, and the previews must be opened while signed in to Vercel.
+8. **Absolute lab numbers on this machine are noisy.** Identical builds varied by 2x across the session. The before/after conclusions rest on the interleaved A/B, not on single runs.
 
 ## iPhone QA checklist (Safari, real device)
 

@@ -1,0 +1,17 @@
+{
+  "label": "lab, Playwright",
+  "date": "2026-11-04",
+  "method": "Chromium 390x844 mobile emulation, 4x CPU throttle, Slow-4G (150ms RTT, 1.6/0.75 Mbps), cold cache. Interleaved A/B (qa/perf-ab.template.js): original main (1b23d25) and the shipped code (3567792) both served locally with `next start`, alternating load by load with the order swapped each round, 5 rounds per page, medians reported. 'photo' = first on-screen photo that is decoded and not faded out (rAF poll). TBT = sum of (longtask - 50ms) during load + 5s.",
+  "why_interleaved": "Machine timing drifted during the session: the same unchanged Stage 6 build measured LCP ~2.2s earlier and 2.0-4.5s later. Separate before/after runs taken hours apart are not comparable; interleaving cancels the drift.",
+  "home":   { "before": { "fcp": 2700, "lcp": 7768, "photo": 3151, "tbt": 4940, "kb": 1106 }, "after": { "fcp": 1984, "lcp": 1984, "photo": 1970, "tbt": 2982, "kb": 700 },
+              "first_ab_run": { "before": { "fcp": 3884, "lcp": 12176, "tbt": 3319, "kb": 870 }, "after": { "fcp": 4724, "lcp": 4724, "tbt": 5193, "kb": 700 } } },
+  "browse": { "before": { "fcp": 3572, "lcp": 3676, "photo": 8677, "tbt": 6171, "kb": 823 }, "after": { "fcp": 3792, "lcp": 4180, "photo": 3819, "tbt": 5291, "kb": 719 },
+              "note": "Original LCP undercounts: its grid fades in from opacity 0 after hydration and Chrome does not report those photos as LCP. First visible photo is the honest comparison (8.7s -> 3.8s; every after run beat every before run)." },
+  "item":   { "before": { "fcp": 2456, "lcp": 7848, "tbt": 2531, "kb": 826 }, "after": { "fcp": 2756, "lcp": 3256, "tbt": 3232, "kb": 692 } },
+  "live_production_after": {
+    "url": "https://rewear-kohl-nine.vercel.app/",
+    "home_3_runs": { "fcp": 5816, "lcp": 5816, "tbt": 6661, "kb": 674 },
+    "home_5_runs": { "fcp": 5332, "lcp": 5332, "tbt": 5073, "kb": 690, "ttfb_ms": [213, 225, 342, 278, 268], "css_done_ms": [1511, 1101, 1339, 2042, 1535] },
+    "note": "Taken while the machine was in its slow phase (local control of the same build: FCP 2.0-4.5s). HTML arrives by ~0.4s and CSS by ~1.5s, so the gap to first paint is main-thread time on this throttled machine, not Vercel. Not comparable with qa/perf-before.json (live, taken hours earlier in the fast phase)."
+  }
+}
