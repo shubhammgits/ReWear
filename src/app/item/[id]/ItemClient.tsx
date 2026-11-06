@@ -27,7 +27,6 @@ function tomorrowISO() {
 export function ItemClient({ item, lender, reviews, similar }: { item: Item; lender?: Lender; reviews: Review[]; similar: Item[] }) {
   const [unit, setUnit] = useState<DurationUnit>("hours");
   const [amount, setAmount] = useState(4);
-  // Dates are set after mount: this page is statically generated, so build-time dates would be stale
   const [date, setDate] = useState("");
   const [today, setToday] = useState("");
   useEffect(() => {
@@ -36,7 +35,6 @@ export function ItemClient({ item, lender, reviews, similar }: { item: Item; len
   }, []);
   const [time, setTime] = useState("18:00");
   const [confirmed, setConfirmed] = useState(false);
-  // Phones: a sticky price bar that steps aside while the booking card itself is on screen
   const bookRef = useRef<HTMLElement>(null);
   const [bookVisible, setBookVisible] = useState(false);
   useEffect(() => {
