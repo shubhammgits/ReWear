@@ -164,7 +164,7 @@ export function Dashboard() {
 
             <div className="surface-dark rounded-[2rem] bg-ink p-6 text-ivory sm:p-10">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h2 className="text-2xl">Monthly earnings</h2>
+                <h2 className="text-2xl">Monthly Earnings</h2>
                 <p className="text-sm text-ivory/60">After ReWear&apos;s 15% fee</p>
               </div>
               <div className="mt-10 flex h-56 items-end gap-3 sm:gap-6" role="img" aria-label={`Earnings bar chart: ${earnings.monthly.map((m) => `${m.month} ${formatINR(m.amount)}`).join(", ")}`}>
