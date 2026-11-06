@@ -7,7 +7,7 @@ export default function NotFound() {
       <h1 className="mt-2 text-4xl sm:text-5xl">This look has left the closet.</h1>
       <p className="mt-4 text-ink/70">The page you&apos;re after was rented out, returned, or never existed. Plenty more where it came from.</p>
       <div className="mt-8">
-        <Button href="/browse">Browse outfits</Button>
+        <Button href="/browse">Browse Outfits</Button>
       </div>
     </section>
   );
