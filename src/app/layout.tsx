@@ -10,7 +10,6 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   display: "swap",
-  // opsz drives font-optical-sizing; the unused SOFT axis added ~100KB of font data
   axes: ["opsz"],
   style: ["normal", "italic"],
 });
@@ -31,7 +30,6 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#FAF7F2",
-  // Lets the page use the full iPhone screen; bars pad themselves with env(safe-area-inset-*)
   viewportFit: "cover",
 };
 
