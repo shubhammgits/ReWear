@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function BrowsePage() {
   return (
     <>
-      <PageHeader eyebrow="Browse" title="Find the one for tonight." intro="20 hand-picked looks from verified closets across India. Filter, sort, fall in love." />
+      <PageHeader eyebrow="Browse" title="Find the one for tonight." intro="20 hand picked looks from verified closets across India. Filter, sort, fall in love." />
       {/* The static HTML carries the unfiltered grid (so its first photos preload and paint early);
           the client then swaps in the same component seeded from the URL's filters */}
       <Suspense fallback={<BrowseClient initial={{}} />}>
