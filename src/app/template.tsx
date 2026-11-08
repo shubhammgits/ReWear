@@ -7,7 +7,6 @@ import { motion, useReducedMotion } from "framer-motion";
 // load it would cover the page until hydration finishes, hurting perceived speed and LCP.
 let hasNavigated = false;
 
-/** Route transition: a plum curtain sweeps away to reveal each new page. */
 export default function Template({ children }: { children: React.ReactNode }) {
   const reduce = useReducedMotion();
   const play = hasNavigated && !reduce;
