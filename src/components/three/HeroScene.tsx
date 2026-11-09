@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-// Fiber's own loader instead of drei's useTexture keeps drei (and three-stdlib) out of the hero chunk
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { img } from "@/lib/utils";
