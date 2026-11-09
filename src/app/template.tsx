@@ -3,8 +3,6 @@
 import { useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-// The curtain only plays on client-side navigations. On the first (server-rendered)
-// load it would cover the page until hydration finishes, hurting perceived speed and LCP.
 let hasNavigated = false;
 
 export default function Template({ children }: { children: React.ReactNode }) {
