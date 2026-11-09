@@ -112,7 +112,7 @@ export function Footer() {
         ReWear
       </p>
       <div className="mx-auto flex max-w-7xl flex-col gap-2 border-t border-ivory/10 px-6 pb-28 pt-6 text-xs md:pb-6 text-ivory/60 sm:flex-row sm:justify-between">
-        <p>© {new Date().getFullYear()} ReWear Technologies. Made with love (and lots of chai) in India.</p>
+        <p>© {new Date().getFullYear()} ReWear Technologies. Made with love (and lots of coffee) in India.</p>
         <p>Images via Unsplash · Demo build with mock data</p>
       </div>
     </footer>
