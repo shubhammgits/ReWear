@@ -16,7 +16,6 @@ const links = [
   { href: "/dashboard", label: "Dashboard" },
 ];
 
-// Pages that already have their own bottom bar, or where "Rent an outfit" is the page itself
 const noMobileCTA = ["/browse", "/item", "/list-your-clothes"];
 
 export function Logo({ className }: { className?: string }) {
