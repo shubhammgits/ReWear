@@ -13,7 +13,6 @@ const links = [
   { href: "/browse", label: "Browse" },
   { href: "/#how-it-works", label: "How it works" },
   { href: "/list-your-clothes", label: "Lend & earn" },
-  { href: "/dashboard", label: "Dashboard" },
 ];
 
 const noMobileCTA = ["/browse", "/item", "/list-your-clothes"];

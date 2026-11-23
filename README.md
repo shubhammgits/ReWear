@@ -1,6 +1,6 @@
 # ReWear — Wear more. Own less.
 
-A peer-to-peer clothing rental marketplace front end. Renters book occasion wear by the hour or day; lenders list their wardrobe and earn. Everything runs on mock JSON data, organized so a real API can drop in later.
+A clothing rental site for one launch city. Renters pick occasion wear by the hour or day and book on WhatsApp; lenders fill in a listing form that arrives as a WhatsApp message. There is no backend yet: outfits live in JSON files, organized so a real API can drop in later.
 
 ## Stack
 
@@ -9,6 +9,20 @@ A peer-to-peer clothing rental marketplace front end. Renters book occasion wear
 - **React Three Fiber + drei** for the WebGL hero (custom cloth-wave shader) and the item 3D viewer
 - **Framer Motion** for route transitions, text reveals, magnetic buttons, tilt cards and micro-interactions
 - **lucide-react** icons, **next/font** (Fraunces + DM Sans), **next/image** with AVIF/WebP
+
+## Launch setup
+
+Two settings, read at build time. Set them in Vercel (Project → Settings → Environment Variables), then redeploy. For local runs, copy `.env.example` to `.env.local`.
+
+| Variable | Example | Used for |
+| --- | --- | --- |
+| `NEXT_PUBLIC_CITY` | `Jaipur` | The one city shown across the site |
+| `NEXT_PUBLIC_WHATSAPP` | `919876543210` | WhatsApp Business number, country code first, digits only. Every "Book on WhatsApp", listing and drops button opens a chat with it |
+
+Before promoting the site, replace the sample outfits:
+
+- `src/data/items.json`: one entry per real outfit (photos, size, prices, deposit, cleaning fee). Image ids are Unsplash photo ids today; to use your own photos, put them in `public/` and update `img()` in `src/lib/utils.ts`.
+- `src/data/reviews.json`: starts empty. Add real reviews (with the renter's permission) and they appear on that outfit's page.
 
 ## Getting started
 
@@ -32,11 +46,10 @@ npm start
 
 | Route | What's there |
 | --- | --- |
-| `/` | The scroll story: 3D hero → closet opening (pinned) → how it works (Renter/Lender toggle) → occasion carousel (pinned horizontal scroll) → featured rentals (tilt + quick view) → price calculator → earnings estimator → trust + reviews → impact counters → FAQ → final CTA |
+| `/` | The scroll story: 3D hero → closet opening (pinned) → how it works (Renter/Lender toggle) → occasion carousel (pinned horizontal scroll) → featured rentals (tilt + quick view) → price calculator → earnings estimator → trust → impact → FAQ → final CTA |
 | `/browse` | Search, filters (occasion, size, city, duration, max price), sort, animated grid. Filters sync to the URL so links are shareable (e.g. `/browse?occasion=Wedding`) |
-| `/item/[id]` | Gallery with hover zoom, lazy 3D viewer, date/time picker, live price breakdown, lender card, reviews, similar items. Statically generated for all 20 items |
-| `/list-your-clothes` | 4-step form: photo upload with previews (drag & drop), details, pricing per 4h/day/3 days, availability calendar |
-| `/dashboard` | Mock "My rentals" and "My earnings" (stats, bar chart, listings table) |
+| `/item/[id]` | Gallery with hover zoom, lazy 3D viewer, date/time picker, live price breakdown, "Book on WhatsApp" with the details pre-filled, real reviews once added, similar items |
+| `/list-your-clothes` | 4-step form: photos, details, pricing per 4h/day/3 days, availability calendar. Sends the listing to ReWear on WhatsApp; the lender attaches photos in the chat |
 
 ## Project structure
 
@@ -44,7 +57,7 @@ npm start
 src/
   app/                    # Routes (App Router)
     template.tsx          # Route transition curtain
-    browse/ item/[id]/ list-your-clothes/ dashboard/
+    browse/ item/[id]/ list-your-clothes/
   components/
     home/                 # One file per home-page section
     layout/               # Header, Footer, CustomCursor
@@ -52,7 +65,7 @@ src/
     three/                # HeroScene (R3F), HeroVisual (lazy loader + fallback), ItemViewer3D
     providers/            # SmoothScroll (Lenis ↔ GSAP ticker)
     ui/                   # Button (magnetic), Reveal, Counter, Slider, Modal, PageHeader
-  data/                   # Mock JSON: items, lenders, reviews, content, dashboard
+  data/                   # JSON data: items, lenders, reviews, content
   lib/
     api.ts                # Data access layer: swap for fetch() calls later
     pricing.ts            # Rental quote + lender earnings logic
@@ -86,4 +99,4 @@ Headings use Fraunces, body uses DM Sans. Cards are rounded with soft plum-tinte
 
 ## Credits
 
-Placeholder photography from [Unsplash](https://unsplash.com). All people, listings, reviews and numbers are fictional demo data.
+Sample outfit photos from [Unsplash](https://unsplash.com). The 20 sample outfits are placeholders until `src/data/items.json` holds real listings.

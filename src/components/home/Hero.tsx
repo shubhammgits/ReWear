@@ -1,10 +1,11 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowRight, Sparkles, Star } from "lucide-react";
+import { ArrowDown, ArrowRight, MapPin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { RevealText } from "@/components/ui/Reveal";
 import { HeroVisual } from "@/components/three/HeroVisual";
+import { site } from "@/lib/site";
 
 export function Hero() {
   const reduce = useReducedMotion();
@@ -51,17 +52,10 @@ export function Hero() {
             </Button>
           </motion.div>
 
-          <motion.div {...fade(0.9)} className="mt-10 flex items-center gap-4 text-sm text-muted">
-            <div className="flex -space-x-2" aria-hidden>
-              {["bg-plum", "bg-gold", "bg-blush", "bg-ink"].map((c) => (
-                <span key={c} className={`h-8 w-8 rounded-full ring-2 ring-ivory ${c}`} />
-              ))}
-            </div>
+          <motion.div {...fade(0.9)} className="mt-10 flex items-center gap-2 text-sm text-muted">
+            <MapPin className="h-4 w-4 text-gold-deep" aria-hidden />
             <p>
-              <span className="inline-flex items-center gap-1 font-semibold text-ink">
-                <Star className="h-4 w-4 fill-gold text-gold" aria-hidden /> 4.9
-              </span>{" "}
-              from 18,000+ rentals across 8 cities
+              Now renting in <span className="font-semibold text-ink">{site.city}</span> · book in minutes on WhatsApp
             </p>
           </motion.div>
         </div>

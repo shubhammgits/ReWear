@@ -44,7 +44,7 @@ export function PriceBreakdown({ q }: { q: Quote }) {
       </dl>
       <div className="mt-5 flex items-end justify-between border-t border-dashed border-line pt-5">
         <div>
-          <p className="text-sm text-ink/70">Pay today</p>
+          <p className="text-sm text-ink/70">Total</p>
           <p className="text-xs text-muted">You get {formatINR(q.deposit)} back after return</p>
         </div>
         <Rolling value={q.total} className="font-display text-4xl text-plum" />

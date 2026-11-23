@@ -1,18 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { ArrowRight, TrendingUp } from "lucide-react";
 import { lenderEarnings } from "@/lib/pricing";
-import { formatINR, img } from "@/lib/utils";
-import { Counter } from "@/components/ui/Counter";
+import { formatINR } from "@/lib/utils";
+import { site } from "@/lib/site";
 import { Slider } from "@/components/ui/Slider";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow, FadeIn, RevealText } from "@/components/ui/Reveal";
 
 export function EarnSection() {
   const [items, setItems] = useState(6);
-  const [rentals, setRentals] = useState(3);
+  const [rentals, setRentals] = useState(2);
   const [price, setPrice] = useState(800);
   const monthly = lenderEarnings(items, rentals, price);
 
@@ -24,21 +23,13 @@ export function EarnSection() {
           <Eyebrow light>For lenders</Eyebrow>
           <RevealText id="earn-title" text="Your clothes can earn for you." className="text-[clamp(2.6rem,5.5vw,5rem)] leading-[0.98]" />
           <p className="mt-6 max-w-md text-lg text-ivory/70">
-            That lehenga from your cousin&apos;s wedding? It could be paying for your next holiday. Ananya from Mumbai made
+            That lehenga from your cousin&apos;s wedding could be paying for your next holiday. Lend it to ReWear: we photograph it, find
+            renters in {site.city}, and handle the deposit, handover and cleaning.
           </p>
-          <p className="mt-3 font-display text-[clamp(3rem,7vw,5.5rem)] leading-none text-gold">
-            <Counter value={18450} prefix="₹" />
-            <span className="ml-2 font-sans text-base text-ivory/60">last month</span>
+          <p className="mt-6 flex items-center gap-2 text-sm text-ivory/70">
+            <TrendingUp className="h-4 w-4 text-gold" aria-hidden />
+            You keep 75% of every rental, paid by UPI.
           </p>
-          <div className="mt-8 flex items-center gap-4">
-            <div className="relative h-24 w-20 overflow-hidden rounded-2xl ring-2 ring-gold/50">
-              <Image src={img("photo-1583391733956-3750e0ff4e8b", 200)} alt="Ananya's most-rented lehenga" fill sizes="80px" className="object-cover" />
-            </div>
-            <p className="max-w-xs text-sm text-ivory/70">
-              <TrendingUp className="mr-1 inline h-4 w-4 text-gold" aria-hidden />
-              Her blush lehenga alone has been rented 14 times this season.
-            </p>
-          </div>
         </div>
 
         <FadeIn>
@@ -57,7 +48,7 @@ export function EarnSection() {
                   <span className="font-sans text-base text-ivory/60"> /month</span>
                 </p>
                 <p className="mt-1 text-xs text-ivory/70">
-                  {items} × {rentals} × {formatINR(price)}, after our 15% fee
+                  {items} × {rentals} × {formatINR(price)}, after our 25% fee. An estimate, not a promise
                 </p>
               </div>
               <Button href="/list-your-clothes" variant="gold" size="lg">

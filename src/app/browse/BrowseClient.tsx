@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
-import { OCCASIONS, SIZES, allItems, content } from "@/lib/api";
+import { OCCASIONS, SIZES, allItems } from "@/lib/api";
 import type { Item, OccasionName, Size } from "@/lib/types";
 import { cn, formatINR } from "@/lib/utils";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -15,7 +15,7 @@ import { Slider } from "@/components/ui/Slider";
 const QuickView = dynamic(() => import("@/components/product/QuickView").then((m) => m.QuickView), { ssr: false });
 
 type Duration = "4h" | "day" | "3days";
-type Sort = "popular" | "price-asc" | "price-desc" | "rating";
+type Sort = "featured" | "price-asc" | "price-desc";
 
 const durationLabel: Record<Duration, string> = { "4h": "4 hours", day: "1 day", "3days": "3 days" };
 const priceFor = (i: Item, d: Duration) => (d === "4h" ? i.pricing.per4h : d === "day" ? i.pricing.perDay : i.pricing.per3Days);
@@ -39,10 +39,9 @@ export function BrowseClient({ initial }: { initial: Initial }) {
     (params.get("occasion")?.split(",").filter((o) => OCCASIONS.includes(o as OccasionName)) as OccasionName[]) ?? []
   );
   const [sizes, setSizes] = useState<Size[]>((params.get("size")?.split(",") as Size[]) ?? []);
-  const [city, setCity] = useState(params.get("city") ?? "");
   const [duration, setDuration] = useState<Duration>((params.get("d") as Duration) || "day");
   const [maxPrice, setMaxPrice] = useState(Number(params.get("max")) || MAX_PRICE);
-  const [sort, setSort] = useState<Sort>((params.get("sort") as Sort) || "popular");
+  const [sort, setSort] = useState<Sort>((params.get("sort") as Sort) || "featured");
   // undefined until the first Quick view tap, so the modal chunk only loads on demand
   const [quick, setQuick] = useState<Item | null | undefined>(undefined);
   const [drawer, setDrawer] = useState(false);
@@ -53,15 +52,14 @@ export function BrowseClient({ initial }: { initial: Initial }) {
     if (query) sp.set("q", query);
     if (occasions.length) sp.set("occasion", occasions.join(","));
     if (sizes.length) sp.set("size", sizes.join(","));
-    if (city) sp.set("city", city);
     if (duration !== "day") sp.set("d", duration);
     if (maxPrice < MAX_PRICE) sp.set("max", String(maxPrice));
-    if (sort !== "popular") sp.set("sort", sort);
+    if (sort !== "featured") sp.set("sort", sort);
     const qs = sp.toString();
     // Only touch the URL when filters actually changed (a replace on mount interrupts quick navigations)
     if (qs === window.location.search.replace(/^\?/, "")) return;
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-  }, [query, occasions, sizes, city, duration, maxPrice, sort, pathname, router]);
+  }, [query, occasions, sizes, duration, maxPrice, sort, pathname, router]);
 
   // Lock the page behind the filter sheet (native scroll on touch would otherwise move it)
   useEffect(() => {
@@ -77,23 +75,20 @@ export function BrowseClient({ initial }: { initial: Initial }) {
         (!q || [i.name, i.type, i.color, i.category, i.city].some((f) => f.toLowerCase().includes(q))) &&
         (!occasions.length || i.occasions.some((o) => occasions.includes(o))) &&
         (!sizes.length || sizes.includes(i.size)) &&
-        (!city || i.city === city) &&
         priceFor(i, duration) <= maxPrice
     );
     const sorted = [...list];
     if (sort === "price-asc") sorted.sort((a, b) => priceFor(a, duration) - priceFor(b, duration));
     if (sort === "price-desc") sorted.sort((a, b) => priceFor(b, duration) - priceFor(a, duration));
-    if (sort === "rating") sorted.sort((a, b) => b.rating - a.rating);
-    if (sort === "popular") sorted.sort((a, b) => b.reviewsCount - a.reviewsCount);
+    if (sort === "featured") sorted.sort((a, b) => Number(b.featured) - Number(a.featured));
     return sorted;
-  }, [query, occasions, sizes, city, duration, maxPrice, sort]);
+  }, [query, occasions, sizes, duration, maxPrice, sort]);
 
   const toggle = <T,>(list: T[], v: T) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
-  const activeCount = occasions.length + sizes.length + (city ? 1 : 0) + (maxPrice < MAX_PRICE ? 1 : 0);
+  const activeCount = occasions.length + sizes.length + (maxPrice < MAX_PRICE ? 1 : 0);
   const reset = () => {
     setOccasions([]);
     setSizes([]);
-    setCity("");
     setMaxPrice(MAX_PRICE);
     setQuery("");
   };
@@ -126,22 +121,6 @@ export function BrowseClient({ initial }: { initial: Initial }) {
           ))}
         </div>
       </fieldset>
-      <div>
-        <label htmlFor="city" className="mb-3 block text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-          City
-        </label>
-        <select
-          id="city"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="h-12 w-full rounded-full bg-ivory px-5 text-base ring-1 ring-ink/10 focus:outline-none focus:ring-plum"
-        >
-          <option value="">All cities</option>
-          {content.cities.map((c) => (
-            <option key={c}>{c}</option>
-          ))}
-        </select>
-      </div>
       <fieldset>
         <legend className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-muted">Rental duration</legend>
         <div className="grid grid-cols-3 gap-2">
@@ -202,8 +181,7 @@ export function BrowseClient({ initial }: { initial: Initial }) {
             className="h-11 rounded-full bg-sand px-4 text-base font-medium focus:outline-none focus:ring-2 focus:ring-plum"
             aria-label="Sort results"
           >
-            <option value="popular">Most popular</option>
-            <option value="rating">Top rated</option>
+            <option value="featured">Featured</option>
             <option value="price-asc">Price: low to high</option>
             <option value="price-desc">Price: high to low</option>
           </select>
@@ -239,7 +217,7 @@ export function BrowseClient({ initial }: { initial: Initial }) {
           {results.length === 0 && (
             <div className="rounded-[2rem] bg-sand/60 px-6 py-20 text-center">
               <p className="font-display text-3xl">Nothing fits those filters… yet.</p>
-              <p className="mt-2 text-ink/70">Try a different size or city. New closets join every day.</p>
+              <p className="mt-2 text-ink/70">Try a different size or occasion. New pieces are added every week.</p>
               <button onClick={reset} className="mt-6 rounded-full bg-plum px-6 py-3 text-sm font-semibold text-ivory">
                 Clear filters
               </button>

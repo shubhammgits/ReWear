@@ -1,11 +1,6 @@
 "use client";
 
-import { Droplets, Leaf, Repeat, Users } from "lucide-react";
-import { content } from "@/lib/api";
-import { Counter } from "@/components/ui/Counter";
-import { Eyebrow, FadeIn, RevealText } from "@/components/ui/Reveal";
-
-const icons = [Repeat, Droplets, Leaf, Users];
+import { Eyebrow, RevealText } from "@/components/ui/Reveal";
 
 export function Impact() {
   return (
@@ -17,23 +12,9 @@ export function Impact() {
             <RevealText id="impact-title" text="Every rental is a garment not made." className="text-[clamp(2.4rem,5vw,4.5rem)] leading-[1]" />
           </div>
           <p className="max-w-md text-lg text-ink/70 lg:justify-self-end">
-            A single new lehenga takes around 3,000 litres of water to produce. Sharing one ten times? That&apos;s a lot of rivers left alone.
+            Most occasion outfits are worn once or twice, then live in a cupboard. Renting gives each one many more nights out, and nobody pays
+            full price for a single evening.
           </p>
-        </div>
-
-        <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-[2rem] bg-line lg:grid-cols-4">
-          {content.stats.map((s, i) => {
-            const Icon = icons[i];
-            return (
-              <FadeIn key={s.label} delay={i * 0.08} className="bg-ivory p-6 sm:p-10">
-                <Icon className="h-7 w-7 text-gold" strokeWidth={1.5} aria-hidden />
-                <p className="mt-6 font-display text-[clamp(2rem,4vw,3.4rem)] leading-none text-plum">
-                  <Counter value={s.value} suffix={s.suffix} />
-                </p>
-                <p className="mt-3 text-sm text-ink/70">{s.label}</p>
-              </FadeIn>
-            );
-          })}
         </div>
       </div>
     </section>

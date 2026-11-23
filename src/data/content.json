@@ -1,25 +1,66 @@
 {
   "occasions": [
-    { "name": "Wedding", "tagline": "Lehengas, sherwanis & everything shaadi", "image": "photo-1519741497674-611481863552", "alt": "Couple at an elegant wedding celebration" },
-    { "name": "Party", "tagline": "Sequins, satin & after-hours shine", "image": "photo-1492684223066-81342ee5ff30", "alt": "Friends celebrating at a party with confetti" },
-    { "name": "Festival", "tagline": "Garba, Diwali & every reason to dress up", "image": "photo-1533174072545-7a4b6ad7a6c3", "alt": "Crowd celebrating at a festival with colourful lights" },
-    { "name": "Interview", "tagline": "Sharp blazers for big first impressions", "image": "photo-1507679799987-c73779587ccf", "alt": "Professional in a tailored blazer" },
-    { "name": "Photoshoot", "tagline": "Editorial looks the camera adores", "image": "photo-1554048612-b6a482bc67e5", "alt": "Model posing during a fashion photoshoot" },
-    { "name": "Date night", "tagline": "Slip dresses & smart jackets for tonight", "image": "photo-1529636798458-92182e662485", "alt": "Couple dressed up for an evening out" }
+    {
+      "name": "Wedding",
+      "tagline": "Lehengas, sherwanis & everything shaadi",
+      "image": "photo-1519741497674-611481863552",
+      "alt": "Couple at an elegant wedding celebration"
+    },
+    {
+      "name": "Party",
+      "tagline": "Sequins, satin & after-hours shine",
+      "image": "photo-1492684223066-81342ee5ff30",
+      "alt": "Friends celebrating at a party with confetti"
+    },
+    {
+      "name": "Festival",
+      "tagline": "Garba, Diwali & every reason to dress up",
+      "image": "photo-1533174072545-7a4b6ad7a6c3",
+      "alt": "Crowd celebrating at a festival with colourful lights"
+    },
+    {
+      "name": "Interview",
+      "tagline": "Sharp blazers for big first impressions",
+      "image": "photo-1507679799987-c73779587ccf",
+      "alt": "Professional in a tailored blazer"
+    },
+    {
+      "name": "Photoshoot",
+      "tagline": "Editorial looks the camera adores",
+      "image": "photo-1554048612-b6a482bc67e5",
+      "alt": "Model posing during a fashion photoshoot"
+    },
+    {
+      "name": "Date night",
+      "tagline": "Slip dresses & smart jackets for tonight",
+      "image": "photo-1529636798458-92182e662485",
+      "alt": "Couple dressed up for an evening out"
+    }
   ],
   "faqs": [
-    { "q": "How does renting work?", "a": "Pick an outfit, choose your hours or days, and pay securely. We deliver it fresh-cleaned to your door (or you pick it up from the lender), and collect it when your rental ends. No laundry, no stress." },
-    { "q": "What if my outfit doesn't fit?", "a": "Every listing shows exact measurements. If it still doesn't fit on arrival, tell us within 1 hour and we'll swap it or refund the rental fee in full." },
-    { "q": "Is the security deposit refundable?", "a": "Yes, 100%. Your deposit is held (not charged) and released within 48 hours of the lender confirming a safe return." },
-    { "q": "Who cleans the clothes?", "a": "Our partner studios professionally clean every piece between rentals, so you always get it fresh. The cleaning fee is shown upfront — never a surprise." },
-    { "q": "What happens if something gets damaged?", "a": "Small accidents happen. ReWear Damage Protection covers minor stains, loose threads and missing buttons. For bigger damage, we mediate fairly using check-in and check-out photos." },
-    { "q": "How much can I earn as a lender?", "a": "Lenders keep 85% of every rental. Most active lenders with 5–10 occasion pieces earn ₹8,000–₹25,000 a month, and you can pause listings anytime." }
-  ],
-  "stats": [
-    { "label": "Outfits reused", "value": 128400, "suffix": "+" },
-    { "label": "Litres of water saved", "value": 3850000, "suffix": "" },
-    { "label": "kg of CO₂ avoided", "value": 412000, "suffix": "" },
-    { "label": "Lenders earning monthly", "value": 9200, "suffix": "+" }
-  ],
-  "cities": ["Mumbai", "Delhi", "Bengaluru", "Pune", "Hyderabad", "Chennai", "Kolkata", "Jaipur"]
+    {
+      "q": "How does renting work?",
+      "a": "Pick an outfit and tap \"Book on WhatsApp\". We confirm the fit, dates and total in the chat. You pay the rent and cleaning fee by UPI, plus a refundable deposit, then collect the outfit from us or get it delivered locally at cost."
+    },
+    {
+      "q": "What if my outfit doesn't fit?",
+      "a": "Every listing shows its size, and we send exact measurements on WhatsApp before you pay. You can also try it on when you collect it."
+    },
+    {
+      "q": "Is the security deposit refundable?",
+      "a": "Yes. We check the outfit when you return it and refund the deposit by UPI, usually the same day. We only deduct for real damage, at the repair cost, and show you the before and after videos."
+    },
+    {
+      "q": "Who cleans the clothes?",
+      "a": "Every piece goes to a professional dry cleaner between rentals. The cleaning fee is shown upfront, before you pay."
+    },
+    {
+      "q": "What happens if something gets damaged?",
+      "a": "Small stains and loose threads are normal wear and are covered by the cleaning fee. We film every outfit at handover and at return, so any real damage is clear to both sides."
+    },
+    {
+      "q": "How much can I earn as a lender?",
+      "a": "You keep 75% of every rental, paid by UPI once the outfit is back and checked. We photograph your pieces, find renters and handle the deposit and cleaning."
+    }
+  ]
 }

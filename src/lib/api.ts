@@ -7,21 +7,18 @@ import itemsData from "@/data/items.json";
 import lendersData from "@/data/lenders.json";
 import reviewsData from "@/data/reviews.json";
 import contentData from "@/data/content.json";
-import dashboardData from "@/data/dashboard.json";
 import type { Faq, Item, Lender, Occasion, OccasionName, Review, Size } from "./types";
+import { site } from "./site";
 
-const items = itemsData as Item[];
+// One launch city: every outfit is shown as available there
+const items = (itemsData as Item[]).map((i) => ({ ...i, city: site.city }));
 const lenders = lendersData as Lender[];
 const reviews = reviewsData as Review[];
 
-export const content = contentData as {
-  occasions: Occasion[];
-  faqs: Faq[];
-  stats: { label: string; value: number; suffix: string }[];
-  cities: string[];
+export const content = {
+  ...(contentData as { occasions: Occasion[]; faqs: Faq[] }),
+  cities: [site.city],
 };
-
-export const dashboard = dashboardData;
 
 export const SIZES: Size[] = ["XS", "S", "M", "L", "XL", "XXL"];
 export const OCCASIONS: OccasionName[] = ["Wedding", "Party", "Festival", "Interview", "Photoshoot", "Date night"];
@@ -50,9 +47,7 @@ export async function getLender(id: string): Promise<Lender | undefined> {
 }
 
 export async function getReviewsForItem(id: string): Promise<Review[]> {
-  const direct = reviews.filter((r) => r.itemId === id);
-  // Pad with general reviews so every item page has social proof in the mock
-  return direct.length >= 3 ? direct : [...direct, ...reviews.filter((r) => r.itemId !== id)].slice(0, 3);
+  return reviews.filter((r) => r.itemId === id);
 }
 
 export function getSimilarItems(item: Item, limit = 4): Item[] {

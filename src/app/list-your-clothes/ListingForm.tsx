@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Camera, Check, ChevronLeft, ChevronRight, ImagePlus, PartyPopper, Trash2, Wand2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Camera, Check, ChevronLeft, ChevronRight, ImagePlus, MessageCircle, Trash2, Wand2 } from "lucide-react";
 import { OCCASIONS, SIZES, content } from "@/lib/api";
 import { PLATFORM_CUT } from "@/lib/pricing";
+import { site, whatsappLink } from "@/lib/site";
 import type { OccasionName, Size } from "@/lib/types";
 import { cn, formatINR } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -38,7 +39,7 @@ const initial: FormState = {
   category: "",
   occasions: [],
   size: "",
-  city: "",
+  city: site.city,
   description: "",
   per4h: 399,
   perDay: 799,
@@ -93,8 +94,24 @@ export function ListingForm() {
     top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // No backend yet: the listing goes to ReWear as a WhatsApp message, photos follow in the chat
+  const message = [
+    "Hi ReWear! I'd like to lend an outfit.",
+    `Name: ${form.name}`,
+    `Type: ${form.category}, size ${form.size}, ${form.city}`,
+    `Occasions: ${form.occasions.join(", ")}`,
+    `Prices: ${formatINR(form.per4h)} / 4 hrs, ${formatINR(form.perDay)} / day, ${formatINR(form.per3Days)} / 3 days`,
+    `Deposit: ${formatINR(form.deposit)}`,
+    `Free on: ${[...form.available].sort().join(", ")}`,
+    form.description && `About it: ${form.description}`,
+    `I'll send ${form.photos.length} photo${form.photos.length === 1 ? "" : "s"} here.`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
   const submit = () => {
     if (!validate(3)) return;
+    window.open(whatsappLink(message), "_blank", "noopener");
     setDone(true);
     top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -104,15 +121,17 @@ export function ListingForm() {
       <div ref={top} className="mx-auto max-w-2xl px-6 pb-28">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="rounded-[2rem] bg-ivory p-10 text-center shadow-lift ring-1 ring-ink/5">
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 240, damping: 12 }} className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-gold/20">
-            <PartyPopper className="h-9 w-9 text-plum" aria-hidden />
+            <MessageCircle className="h-9 w-9 text-plum" aria-hidden />
           </motion.div>
-          <h2 className="mt-6 text-4xl">&ldquo;{form.name}&rdquo; is live!</h2>
+          <h2 className="mt-6 text-4xl">One last step: send your photos</h2>
           <p className="mx-auto mt-3 max-w-md text-ink/70">
-            Our team will review your photos within 2 hours. At {formatINR(form.perDay)}/day and 3 rentals a month, that&apos;s about{" "}
-            <strong className="text-plum">{formatINR(form.perDay * 3 * (1 - PLATFORM_CUT))}</strong> in your pocket.
+            We&apos;ve opened WhatsApp with the details of &ldquo;{form.name}&rdquo;. Send the message, then attach the same photos in that chat.
+            We&apos;ll reply to review your piece before it goes up for rent.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button href="/dashboard">Go to my dashboard</Button>
+            <Button href={whatsappLink(message)}>
+              <MessageCircle className="h-4 w-4" aria-hidden /> Open WhatsApp again
+            </Button>
             <Button
               variant="secondary"
               onClick={() => {
@@ -193,7 +212,7 @@ export function ListingForm() {
             </Button>
           ) : (
             <Button onClick={submit} variant="gold">
-              Publish listing <Check className="h-4 w-4" aria-hidden />
+              Send to ReWear <MessageCircle className="h-4 w-4" aria-hidden />
             </Button>
           )}
         </div>
@@ -394,7 +413,7 @@ function PricingStep({ form, set }: { form: FormState; set: Setter }) {
   ];
   return (
     <div>
-      <StepTitle title="Name your price." hint="You keep 85% of every rental. We handle cleaning, delivery and protection." />
+      <StepTitle title="Name your price." hint="You keep 75% of every rental. We handle renters, deposits and cleaning." />
       <button type="button" onClick={suggest} className="mb-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-gold/20 px-4 text-sm font-semibold text-ink hover:bg-gold/30">
         <Wand2 className="h-4 w-4" aria-hidden /> Suggest prices for me
       </button>
@@ -419,7 +438,7 @@ function PricingStep({ form, set }: { form: FormState; set: Setter }) {
         ))}
       </div>
       <p className="surface-dark mt-6 rounded-2xl bg-plum p-5 text-ivory">
-        At 3 day-rentals a month you&apos;d earn <strong className="text-gold">{formatINR(form.perDay * 3 * (1 - PLATFORM_CUT))}</strong>. Not bad for
+        At 2 day-rentals a month you&apos;d earn about <strong className="text-gold">{formatINR(form.perDay * 2 * (1 - PLATFORM_CUT))}</strong>. Not bad for
         something that was sitting in a cupboard.
       </p>
     </div>

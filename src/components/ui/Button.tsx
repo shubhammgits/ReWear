@@ -77,7 +77,11 @@ export function Button({
       style={pull ? { x, y } : undefined}
       className="inline-block"
     >
-      {href ? (
+      {href?.startsWith("http") ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" className={cls} aria-label={ariaLabel}>
+          {inner}
+        </a>
+      ) : href ? (
         <Link href={href} className={cls} aria-label={ariaLabel}>
           {inner}
         </Link>

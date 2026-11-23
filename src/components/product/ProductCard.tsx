@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion, useTransform } from "framer-motion";
-import { Eye, MapPin, Star } from "lucide-react";
+import { Eye, MapPin } from "lucide-react";
 import type { Item } from "@/lib/types";
 import { BLUR, formatINR, img } from "@/lib/utils";
 import { useFinePointer } from "@/lib/useFinePointer";
@@ -76,14 +76,7 @@ export function ProductCard({
         </div>
 
         <div className="mt-4 px-1">
-          <div className="flex items-start justify-between gap-3">
-            <h3 className="font-display text-lg leading-snug text-ink">{item.name}</h3>
-            <span className="mt-1 inline-flex shrink-0 items-center gap-1 text-sm font-medium">
-              <Star className="h-3.5 w-3.5 fill-gold text-gold" aria-hidden />
-              {item.rating.toFixed(1)}
-              <span className="sr-only"> out of 5 from {item.reviewsCount} reviews</span>
-            </span>
-          </div>
+          <h3 className="font-display text-lg leading-snug text-ink">{item.name}</h3>
           <p className="mt-1 inline-flex items-center gap-1 text-sm text-muted">
             <MapPin className="h-3.5 w-3.5" aria-hidden /> {item.city}
           </p>

@@ -1,6 +1,7 @@
 import type { DurationUnit, Pricing } from "./types";
 
-export const PLATFORM_CUT = 0.15;
+/** ReWear's share of each rental; the lender keeps the rest */
+export const PLATFORM_CUT = 0.25;
 
 export interface Quote {
   rental: number;

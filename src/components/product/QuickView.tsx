@@ -1,15 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, MapPin, ShieldCheck, Star } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
 import type { Item } from "@/lib/types";
-import { lenderById } from "@/lib/api";
 import { formatINR, img } from "@/lib/utils";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 
 export function QuickView({ item, onClose }: { item: Item | null; onClose: () => void }) {
-  const lender = item ? lenderById(item.lenderId) : undefined;
   return (
     <Modal open={!!item} onClose={onClose} label={item ? `Quick view: ${item.name}` : "Quick view"}>
       {item && (
@@ -24,9 +22,6 @@ export function QuickView({ item, onClose }: { item: Item | null; onClose: () =>
               </p>
               <h2 className="mt-2 text-3xl leading-tight">{item.name}</h2>
               <p className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted">
-                <span className="inline-flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-gold text-gold" aria-hidden /> {item.rating} ({item.reviewsCount} reviews)
-                </span>
                 <span className="inline-flex items-center gap-1">
                   <MapPin className="h-4 w-4" aria-hidden /> {item.city}
                 </span>
@@ -46,12 +41,6 @@ export function QuickView({ item, onClose }: { item: Item | null; onClose: () =>
                 </li>
               ))}
             </ul>
-            {lender && (
-              <p className="inline-flex items-center gap-2 text-sm text-muted">
-                <ShieldCheck className="h-4 w-4 text-plum" aria-hidden /> Lent by {lender.name}
-                {lender.verified && " · Verified"}
-              </p>
-            )}
             <div className="mt-auto">
               <Button href={`/item/${item.id}`} className="w-full">
                 See dates & rent <ArrowRight className="h-4 w-4" aria-hidden />

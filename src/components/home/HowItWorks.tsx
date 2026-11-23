@@ -9,16 +9,16 @@ import { cn } from "@/lib/utils";
 
 const tracks = {
   renter: [
-    { icon: Search, title: "Find your look", text: "Filter by occasion, size, city and budget. Every piece is real, measured and photographed by its owner." },
-    { icon: CalendarCheck, title: "Pick your hours", text: "Rent for 4 hours, a day or a long weekend. Price, deposit and cleaning fee are all shown upfront." },
-    { icon: Truck, title: "Get it delivered", text: "Fresh from professional cleaning, at your door before you need it. Or pick it up nearby." },
-    { icon: Sparkles, title: "Shine & return", text: "Wear it, love it, hand it back. No laundry. Your deposit is released within 48 hours." },
+    { icon: Search, title: "Find your look", text: "Filter by occasion, size and budget. Every piece is measured, and we confirm the fit with you before you pay." },
+    { icon: CalendarCheck, title: "Book on WhatsApp", text: "Pick 4 hours, a day or a long weekend and message us. Price, deposit and cleaning fee are all shown upfront." },
+    { icon: Truck, title: "Collect it fresh", text: "Professionally cleaned before every rental. Pick it up from us, or we arrange local delivery at cost." },
+    { icon: Sparkles, title: "Shine & return", text: "Wear it, love it, hand it back. No laundry. We check it and refund your deposit, usually the same day." },
   ],
   lender: [
-    { icon: Camera, title: "Snap & list", text: "Upload a few photos, add your size and set prices per 4 hours, day or 3 days. Takes 5 minutes." },
-    { icon: Shirt, title: "Approve requests", text: "Accept bookings that suit you. Block dates whenever you want the piece for yourself." },
-    { icon: PackageCheck, title: "We handle the rest", text: "Pickup, cleaning, delivery and damage protection: all managed by ReWear." },
-    { icon: IndianRupee, title: "Get paid", text: "Keep 85% of every rental, paid straight to your bank every week. Your closet, now on payroll." },
+    { icon: Camera, title: "Snap & send", text: "Fill in the listing form with your size and prices, then send us your photos on WhatsApp. Takes 5 minutes." },
+    { icon: Shirt, title: "We review it", text: "We check every piece. If it suits the collection, we photograph it and put it up for rent." },
+    { icon: PackageCheck, title: "We handle the rest", text: "Renters, deposits, handover and cleaning: all managed by ReWear." },
+    { icon: IndianRupee, title: "Get paid", text: "Keep 75% of every rental, paid by UPI once the outfit is back. Your closet, now on payroll." },
   ],
 };
 
