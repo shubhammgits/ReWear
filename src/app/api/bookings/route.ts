@@ -90,7 +90,10 @@ export async function POST(request: NextRequest) {
       notes: { booking_id: booking.id, outfit: outfit.slug },
     });
     orderId = order.id;
-  } catch {
+  } catch (e) {
+    // Shows in the host's function logs, e.g. a missing or mismatched key ("Authentication failed")
+    const err = e as { message?: string; error?: { description?: string } };
+    console.error("Razorpay order failed:", err.error?.description ?? err.message ?? e);
     await db.from("bookings").update({ status: "expired" }).eq("id", booking.id);
     return fail("Payments are not working right now. Please try again in a few minutes.", 502);
   }
