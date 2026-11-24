@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
-import { supabaseAnonKey, supabaseUrl } from "./env";
+import { hasSupabase, supabaseAnonKey, supabaseUrl } from "./env";
 
 /** Acts as the signed-in visitor, so the database's access rules apply */
 export async function supabaseServer() {
@@ -51,6 +51,7 @@ export async function currentUser() {
 }
 
 export async function requireUser(next: string) {
+  if (!hasSupabase) notFound(); // accounts aren't set up on this deployment
   const me = await currentUser();
   if (!me) redirect(`/login?next=${encodeURIComponent(next)}`);
   return me;
@@ -58,6 +59,7 @@ export async function requireUser(next: string) {
 
 /** Anyone who isn't an admin gets a plain 404, so the admin area isn't advertised */
 export async function requireAdmin() {
+  if (!hasSupabase) notFound();
   const me = await currentUser();
   if (!me) redirect("/login?next=/admin");
   if (me.profile?.role !== "admin") notFound();
