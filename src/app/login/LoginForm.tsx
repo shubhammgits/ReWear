@@ -31,7 +31,9 @@ export function LoginForm({ next, initialError }: { next: string; initialError: 
       setError(
         error.status === 429
           ? "Too many emails sent. Please wait a few minutes and try again."
-          : "We couldn't send the email. Check the address and try again."
+          : error.status && error.status >= 500
+            ? "Our email service isn't responding right now. Please try again in a few minutes, or message us on WhatsApp."
+            : "We couldn't send the email. Check the address and try again."
       );
       return;
     }
