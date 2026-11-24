@@ -34,6 +34,9 @@ export interface Item {
   cleaningFee: number;
   lenderId: string;
   featured?: boolean;
+  /** Set for outfits from the database, which can be booked and paid for online */
+  outfitId?: string;
+  measurements?: string;
 }
 
 export interface Lender {

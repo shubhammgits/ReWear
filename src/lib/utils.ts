@@ -31,3 +31,25 @@ export function isLowEndDevice() {
 export function prefersReducedMotion() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
+
+/** Only same-site paths, so a crafted link can't send people to another website after sign-in */
+export function safeNext(next?: string | null, fallback = "/bookings") {
+  return next && next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\") ? next : fallback;
+}
+
+/** Shared text-input style */
+export const field =
+  "h-12 w-full rounded-2xl bg-sand/60 px-4 text-base ring-1 ring-ink/10 placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-plum";
+
+/** Dates and times always in Indian time, whatever the server's clock zone */
+export function formatWhen(d: string | Date, withYear = false) {
+  return new Date(d).toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    ...(withYear ? { year: "numeric" } : {}),
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}

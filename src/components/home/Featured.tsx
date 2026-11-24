@@ -5,7 +5,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import type { Item } from "@/lib/types";
-import { allItems } from "@/lib/api";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow, RevealText } from "@/components/ui/Reveal";
@@ -13,10 +12,12 @@ import { Eyebrow, RevealText } from "@/components/ui/Reveal";
 // Only needed after a tap on "Quick view": keep the modal out of the page's first-load JS
 const QuickView = dynamic(() => import("@/components/product/QuickView").then((m) => m.QuickView), { ssr: false });
 
-export function Featured() {
+export function Featured({ items: all }: { items: Item[] }) {
   // undefined until the first Quick view tap, so the modal chunk only loads on demand
   const [quick, setQuick] = useState<Item | null | undefined>(undefined);
-  const items = allItems().filter((i) => i.featured);
+  const featured = all.filter((i) => i.featured);
+  const items = (featured.length ? featured : all).slice(0, 8);
+  if (!items.length) return null;
 
   return (
     <section className="py-28 sm:py-36" aria-labelledby="featured-title">
@@ -27,7 +28,7 @@ export function Featured() {
             <RevealText id="featured-title" text="Closets worth borrowing." className="text-[clamp(2.4rem,5vw,4.5rem)] leading-[1]" />
           </div>
           <Button href="/browse" variant="secondary">
-            Browse all 20 looks <ArrowRight className="h-4 w-4" aria-hidden />
+            {all.length > 1 ? `Browse all ${all.length} looks` : "Browse rentals"} <ArrowRight className="h-4 w-4" aria-hidden />
           </Button>
         </div>
 

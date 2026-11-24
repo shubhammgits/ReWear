@@ -12,17 +12,36 @@ A clothing rental site for one launch city. Renters pick occasion wear by the ho
 
 ## Launch setup
 
-Two settings, read at build time. Set them in Vercel (Project → Settings → Environment Variables), then redeploy. For local runs, copy `.env.example` to `.env.local`.
+All settings are listed in `.env.example`. Copy it to `.env.local` for local runs, and add the same names in the host's environment variables for the live site (then redeploy: `NEXT_PUBLIC_*` values are read at build time). Never commit `.env.local` or paste the two secrets anywhere.
 
-| Variable | Example | Used for |
-| --- | --- | --- |
-| `NEXT_PUBLIC_CITY` | `Jaipur` | The one city shown across the site |
-| `NEXT_PUBLIC_WHATSAPP` | `919876543210` | WhatsApp Business number, country code first, digits only. Every "Book on WhatsApp", listing and drops button opens a chat with it |
+| Variable | Used for |
+| --- | --- |
+| `NEXT_PUBLIC_CITY`, `NEXT_PUBLIC_WHATSAPP` | The one city served; the WhatsApp Business number (country code first, digits only) |
+| `NEXT_PUBLIC_LEGAL_NAME`, `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_ADDRESS` | Contact and policy pages (Razorpay checks these before activation) |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Database, sign-in and photo storage. Without them the site shows the sample outfits and books on WhatsApp |
+| `SUPABASE_SERVICE_ROLE_KEY` | **Secret.** Server-side holds, payments and refunds |
+| `NEXT_PUBLIC_RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` | Online checkout. `RAZORPAY_KEY_SECRET` is **secret** |
+| `RAZORPAY_WEBHOOK_SECRET` | **Secret.** Confirms payments even if the renter closes the browser mid-checkout |
+| `NEXT_PUBLIC_GOOGLE_SIGNIN` | `on` shows "Continue with Google" once it's set up in Supabase |
 
-Before promoting the site, replace the sample outfits:
+### Supabase (once)
 
-- `src/data/items.json`: one entry per real outfit (photos, size, prices, deposit, cleaning fee). Image ids are Unsplash photo ids today; to use your own photos, put them in `public/` and update `img()` in `src/lib/utils.ts`.
-- `src/data/reviews.json`: starts empty. Add real reviews (with the renter's permission) and they appear on that outfit's page.
+1. Run `supabase/migrations/0001_init.sql` in the SQL Editor.
+2. **Authentication → URL Configuration**: Site URL = the live site; Redirect URLs = `http://localhost:3000/**` and `https://<live-domain>/**`.
+3. **Authentication → Emails → Magic Link** template: add `{{ .Token }}` so the email carries the 6-digit code (the link keeps working too), e.g. `<p>Your ReWear code is <strong>{{ .Token }}</strong></p>`.
+4. Before real customers: Supabase's built-in email sends only a few emails per hour. Add custom SMTP (Authentication → Emails → SMTP Settings), e.g. Resend or Brevo on their free plans.
+5. Make yourself admin after your first sign-in: `node --env-file=.env.local scripts/make-admin.mjs you@example.com`, then open `/admin`.
+
+### Razorpay webhook (on the live site)
+
+Razorpay → Settings → Webhooks → Add: URL `https://<live-domain>/api/razorpay/webhook`, a secret (also set as `RAZORPAY_WEBHOOK_SECRET`), events `payment.captured`, `payment.failed`, `refund.processed`, `refund.failed`. Test and live mode each need their own webhook.
+
+### How bookings work
+
+- Renters sign in (email code, or Google), pick a start date on the availability calendar, a time and a duration, then pay with Razorpay Checkout. The price is always recalculated on the server.
+- Checkout holds the dates for 15 minutes. Postgres refuses overlapping bookings (`no_double_booking`), cleaning turnaround (24h) included, even if two people pay at the same moment. If a payment lands after its hold lapsed and the dates went to someone else, it is refunded in full automatically.
+- Renters cancel from **My bookings**; refunds follow `/refunds` (`src/lib/policy.ts`). The admin can cancel with a full, policy or custom refund.
+- Lenders are paid by hand: **Admin → Payouts** lists what each lender is owed (full rent once returned, or the forfeited rent on a late cancellation). Send it by UPI, then mark it paid with the reference.
 
 ## Getting started
 
@@ -48,7 +67,10 @@ npm start
 | --- | --- |
 | `/` | The scroll story: 3D hero → closet opening (pinned) → how it works (Renter/Lender toggle) → occasion carousel (pinned horizontal scroll) → featured rentals (tilt + quick view) → price calculator → earnings estimator → trust → impact → FAQ → final CTA |
 | `/browse` | Search, filters (occasion, size, city, duration, max price), sort, animated grid. Filters sync to the URL so links are shareable (e.g. `/browse?occasion=Wedding`) |
-| `/item/[id]` | Gallery with hover zoom, lazy 3D viewer, date/time picker, live price breakdown, "Book on WhatsApp" with the details pre-filled, real reviews once added, similar items |
+| `/item/[id]` | Gallery, availability calendar, live price breakdown and Razorpay checkout (or "Book on WhatsApp" when online booking isn't configured), similar items |
+| `/login` | Sign in or sign up with an emailed code (and Google, when enabled) |
+| `/bookings`, `/bookings/[code]` | A renter's bookings, payment breakdown, refunds and self-service cancellation |
+| `/admin` | Admin only: today's handovers and returns, bookings, outfits with photo upload, lenders, payouts |
 | `/list-your-clothes` | 4-step form: photos, details, pricing per 4h/day/3 days, availability calendar. Sends the listing to ReWear on WhatsApp; the lender attaches photos in the chat |
 
 ## Project structure

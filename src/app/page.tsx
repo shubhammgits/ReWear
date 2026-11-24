@@ -9,16 +9,20 @@ import { Trust } from "@/components/home/Trust";
 import { Impact } from "@/components/home/Impact";
 import { FAQ } from "@/components/home/FAQ";
 import { FinalCTA } from "@/components/home/FinalCTA";
+import { getCatalog } from "@/lib/catalog";
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  const items = await getCatalog();
   return (
     <>
       <Hero />
       <ClosetStory />
       <HowItWorks />
       <Occasions />
-      <Featured />
-      <PriceCalculator />
+      <Featured items={items} />
+      <PriceCalculator items={items} />
       <EarnSection />
       <Trust />
       <Impact />

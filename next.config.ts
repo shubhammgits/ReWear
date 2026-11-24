@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+// Outfit photos uploaded through the admin panel live in Supabase Storage
+const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname : "";
+
 const nextConfig: NextConfig = {
   // Lets a production build for QA (NEXT_DIST_DIR=.next-prod) run alongside `next dev`
   distDir: process.env.NEXT_DIST_DIR || ".next",
@@ -12,7 +15,10 @@ const nextConfig: NextConfig = {
     // default ladder up to 3840px; small sizes cover avatars, thumbs and the closet cards
     deviceSizes: [360, 414, 640, 750, 828, 1080, 1280, 1920],
     imageSizes: [48, 96, 128, 256, 384],
-    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+      ...(supabaseHost ? [{ protocol: "https" as const, hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }] : []),
+    ],
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion", "@react-three/drei"],

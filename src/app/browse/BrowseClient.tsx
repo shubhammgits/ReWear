@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
-import { OCCASIONS, SIZES, allItems } from "@/lib/api";
+import { OCCASIONS, SIZES } from "@/lib/api";
 import type { Item, OccasionName, Size } from "@/lib/types";
 import { cn, formatINR } from "@/lib/utils";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -24,12 +24,12 @@ const MAX_PRICE = 5000;
 type Initial = Record<string, string>;
 
 /** Reads the URL filters once the client has them; see the Suspense fallback in page.tsx. */
-export function BrowseFromURL() {
+export function BrowseFromURL({ items }: { items: Item[] }) {
   // Seeds state once, like before; later URL updates come from the component's own filter changes
-  return <BrowseClient initial={Object.fromEntries(useSearchParams().entries())} />;
+  return <BrowseClient items={items} initial={Object.fromEntries(useSearchParams().entries())} />;
 }
 
-export function BrowseClient({ initial }: { initial: Initial }) {
+export function BrowseClient({ items, initial }: { items: Item[]; initial: Initial }) {
   const params = { get: (k: string): string | null => initial[k] ?? null };
   const router = useRouter();
   const pathname = usePathname();
@@ -70,7 +70,7 @@ export function BrowseClient({ initial }: { initial: Initial }) {
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const list = allItems().filter(
+    const list = items.filter(
       (i) =>
         (!q || [i.name, i.type, i.color, i.category, i.city].some((f) => f.toLowerCase().includes(q))) &&
         (!occasions.length || i.occasions.some((o) => occasions.includes(o))) &&
@@ -82,7 +82,7 @@ export function BrowseClient({ initial }: { initial: Initial }) {
     if (sort === "price-desc") sorted.sort((a, b) => priceFor(b, duration) - priceFor(a, duration));
     if (sort === "featured") sorted.sort((a, b) => Number(b.featured) - Number(a.featured));
     return sorted;
-  }, [query, occasions, sizes, duration, maxPrice, sort]);
+  }, [items, query, occasions, sizes, duration, maxPrice, sort]);
 
   const toggle = <T,>(list: T[], v: T) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
   const activeCount = occasions.length + sizes.length + (maxPrice < MAX_PRICE ? 1 : 0);
@@ -214,7 +214,13 @@ export function BrowseClient({ initial }: { initial: Initial }) {
               ))}
             </AnimatePresence>
           </motion.ul>
-          {results.length === 0 && (
+          {results.length === 0 && items.length === 0 && (
+            <div className="rounded-[2rem] bg-sand/60 px-6 py-20 text-center">
+              <p className="font-display text-3xl">The first outfits are being photographed.</p>
+              <p className="mt-2 text-ink/70">They&apos;ll be here very soon. Follow us on Instagram to see them first.</p>
+            </div>
+          )}
+          {results.length === 0 && items.length > 0 && (
             <div className="rounded-[2rem] bg-sand/60 px-6 py-20 text-center">
               <p className="font-display text-3xl">Nothing fits those filters… yet.</p>
               <p className="mt-2 text-ink/70">Try a different size or occasion. New pieces are added every week.</p>

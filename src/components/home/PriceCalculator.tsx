@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { allItems } from "@/lib/api";
+import type { Item } from "@/lib/types";
 import { quote } from "@/lib/pricing";
 import type { DurationUnit } from "@/lib/types";
 import { cn, img } from "@/lib/utils";
@@ -14,8 +15,10 @@ import { PriceBreakdown } from "@/components/product/PriceBreakdown";
 
 const picks = ["rw-001", "rw-002", "rw-003", "rw-006"];
 
-export function PriceCalculator() {
-  const options = allItems().filter((i) => picks.includes(i.id));
+export function PriceCalculator({ items }: { items: Item[] }) {
+  // Real outfits once there are some; until then, sample prices to show how pricing works
+  const sample = items.length === 0;
+  const options = sample ? allItems().filter((i) => picks.includes(i.id)) : items.slice(0, 4);
   const [itemId, setItemId] = useState(options[0].id);
   const [unit, setUnit] = useState<DurationUnit>("hours");
   const [amount, setAmount] = useState(6);
@@ -97,9 +100,13 @@ export function PriceCalculator() {
             <PriceBreakdown q={q} />
           </div>
 
-          <Button href={`/item/${item.id}`} className="mt-8 w-full" size="lg">
-            Book {item.name.split(" ").slice(-1)[0].toLowerCase()} for {q.label}
-          </Button>
+          {sample ? (
+            <p className="mt-8 text-center text-sm text-muted">Example prices. Real outfits are coming soon.</p>
+          ) : (
+            <Button href={`/item/${item.id}`} className="mt-8 w-full" size="lg">
+              Book {item.name.split(" ").slice(-1)[0].toLowerCase()} for {q.label}
+            </Button>
+          )}
         </motion.div>
       </div>
     </section>

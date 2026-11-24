@@ -7,10 +7,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, ChevronLeft, Clock, MapPin, MessageCircle, Ruler, ShieldCheck, Star } from "lucide-react";
 import type { DurationUnit, Item, Review } from "@/lib/types";
 import { quote } from "@/lib/pricing";
+import { clashes, MIN_LEAD_HOURS } from "@/lib/policy";
 import { whatsappLink } from "@/lib/site";
 import { cn, formatINR, img } from "@/lib/utils";
 import { Gallery } from "@/components/product/Gallery";
 import { PriceBreakdown } from "@/components/product/PriceBreakdown";
+import { AvailabilityCalendar, isoDay, startOf, useBusy } from "@/components/product/AvailabilityCalendar";
+import { Checkout } from "@/components/product/Checkout";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { FadeIn } from "@/components/ui/Reveal";
@@ -21,18 +24,21 @@ const dayOptions = [1, 2, 3, 5, 7];
 function tomorrowISO() {
   const d = new Date();
   d.setDate(d.getDate() + 1);
-  return d.toISOString().slice(0, 10);
+  return isoDay(d);
 }
 
-export function ItemClient({ item, reviews, similar }: { item: Item; reviews: Review[]; similar: Item[] }) {
+export function ItemClient({ item, reviews, similar, bookable }: { item: Item; reviews: Review[]; similar: Item[]; bookable: boolean }) {
   const [unit, setUnit] = useState<DurationUnit>("hours");
   const [amount, setAmount] = useState(4);
   const [date, setDate] = useState("");
   const [today, setToday] = useState("");
   useEffect(() => {
     setDate(tomorrowISO());
-    setToday(new Date().toISOString().slice(0, 10));
+    setToday(isoDay(new Date()));
   }, []);
+  const { busy, reload } = useBusy(bookable ? item.outfitId : undefined);
+  // While the payment window is open the calendar includes this visitor's own hold; don't flag it as a clash
+  const [paying, setPaying] = useState(false);
   const [time, setTime] = useState("18:00");
   const bookRef = useRef<HTMLElement>(null);
   const [bookVisible, setBookVisible] = useState(false);
@@ -52,6 +58,17 @@ export function ItemClient({ item, reviews, similar }: { item: Item; reviews: Re
     const end = new Date(start.getTime() + q.hours * 3600_000);
     return end.toLocaleString("en-IN", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
   }, [date, time, q.hours]);
+
+  const start = date ? startOf(date, time) : null;
+  const blocked = !bookable
+    ? ""
+    : !start
+      ? "Pick a start date."
+      : start.getTime() < Date.now() + MIN_LEAD_HOURS * 3_600_000
+        ? `Bookings need to start at least ${MIN_LEAD_HOURS} hours from now. Pick a later time.`
+        : busy && clashes(start, q.hours, busy) && !paying
+          ? "The outfit is booked or being cleaned for part of that time. Pick another date, an earlier finish or a shorter rental."
+          : "";
 
   const startAt = date ? new Date(`${date}T${time}`).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "";
   const bookingLink = whatsappLink(
@@ -90,6 +107,7 @@ export function ItemClient({ item, reviews, similar }: { item: Item; reviews: Re
             <span className="inline-flex items-center gap-1">
               <Ruler className="h-4 w-4" aria-hidden /> Size {item.size}
             </span>
+            {item.measurements && <span>{item.measurements}</span>}
           </div>
           <p className="mt-6 max-w-xl leading-relaxed text-ink/80">{item.description}</p>
           <dl className="mt-6 grid max-w-md grid-cols-2 gap-3 text-sm">
@@ -123,8 +141,16 @@ export function ItemClient({ item, reviews, similar }: { item: Item; reviews: Re
               ))}
             </div>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <label className="block">
+            {bookable && (
+              <div className="mt-6">
+                <p className="mb-2 flex items-center gap-1.5 text-sm text-ink/70">
+                  <CalendarDays className="h-4 w-4" aria-hidden /> Start date
+                </p>
+                <AvailabilityCalendar busy={busy} hours={q.hours} time={time} value={date} onChange={setDate} />
+              </div>
+            )}
+            <div className={cn("mt-6 grid gap-4", !bookable && "sm:grid-cols-2")}>
+              <label className={cn("block", bookable && "hidden")}>
                 <span className="mb-2 flex items-center gap-1.5 text-sm text-ink/70">
                   <CalendarDays className="h-4 w-4" aria-hidden /> Start date
                 </span>
@@ -173,14 +199,27 @@ export function ItemClient({ item, reviews, similar }: { item: Item; reviews: Re
             <div className="mt-6">
               <PriceBreakdown q={q} />
             </div>
-            <Button href={bookingLink} className="mt-6 w-full" size="lg">
-              <MessageCircle className="h-5 w-5" aria-hidden /> Book on WhatsApp
-              {/* Phones: the total sits just above, and the longer label would wrap */}
-              <span className="hidden sm:inline">· {formatINR(q.total)}</span>
-            </Button>
-            <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-muted">
-              <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden /> Nothing to pay until we confirm availability and fit with you
-            </p>
+            {bookable ? (
+              <>
+                <Checkout item={item} start={start} unit={unit} amount={amount} q={q} blocked={blocked} onDatesChanged={reload} onPaying={setPaying} />
+                <p className="mt-4 text-center text-sm">
+                  <a href={whatsappLink(`Hi ReWear! A question about "${item.name}" (${item.id}):`)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1.5 text-ink/70 underline underline-offset-2 hover:text-plum">
+                    <MessageCircle className="h-4 w-4" aria-hidden /> Questions about fit? Ask on WhatsApp
+                  </a>
+                </p>
+              </>
+            ) : (
+              <>
+                <Button href={bookingLink} className="mt-6 w-full" size="lg">
+                  <MessageCircle className="h-5 w-5" aria-hidden /> Book on WhatsApp
+                  {/* Phones: the total sits just above, and the longer label would wrap */}
+                  <span className="hidden sm:inline">· {formatINR(q.total)}</span>
+                </Button>
+                <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-muted">
+                  <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden /> Nothing to pay until we confirm availability and fit with you
+                </p>
+              </>
+            )}
           </section>
 
         </div>

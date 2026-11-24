@@ -8,6 +8,8 @@ import { ArrowRight, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { useLenis } from "@/components/providers/SmoothScroll";
+import { AccountLink, useSignedIn } from "./AccountLink";
+import { hasSupabase } from "@/lib/supabase/env";
 
 const links = [
   { href: "/browse", label: "Browse" },
@@ -39,6 +41,7 @@ export function Header() {
   const [pastHero, setPastHero] = useState(false);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const signedIn = useSignedIn();
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   useMotionValueEvent(scrollY, "change", (y) => {
@@ -109,7 +112,8 @@ export function Header() {
               );
             })}
           </nav>
-          <div className="hidden md:block">
+          <div className="hidden items-center gap-1 md:flex">
+            <AccountLink />
             <Button href="/browse" magnetic>
               Rent an outfit
             </Button>
@@ -175,9 +179,15 @@ export function Header() {
               <Button href="/browse" size="lg" className="w-full" magnetic={false}>
                 Rent an outfit <ArrowRight className="h-4 w-4" aria-hidden />
               </Button>
-              <Button href="/list-your-clothes" variant="secondary" size="lg" className="w-full" magnetic={false}>
-                Earn from your wardrobe
-              </Button>
+              {hasSupabase ? (
+                <Button href={signedIn ? "/bookings" : "/login"} variant="secondary" size="lg" className="w-full" magnetic={false}>
+                  {signedIn ? "My bookings" : "Sign in"}
+                </Button>
+              ) : (
+                <Button href="/list-your-clothes" variant="secondary" size="lg" className="w-full" magnetic={false}>
+                  Earn from your wardrobe
+                </Button>
+              )}
             </motion.div>
           </motion.div>
         )}
