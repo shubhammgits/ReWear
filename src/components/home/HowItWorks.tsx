@@ -10,15 +10,15 @@ import { cn } from "@/lib/utils";
 const tracks = {
   renter: [
     { icon: Search, title: "Find your look", text: "Filter by occasion, size and budget. Every piece is measured, and we confirm the fit with you before you pay." },
-    { icon: CalendarCheck, title: "Book on WhatsApp", text: "Pick 4 hours, a day or a long weekend and message us. Price, deposit and cleaning fee are all shown upfront." },
+    { icon: CalendarCheck, title: "Book on WhatsApp", text: "Pick 4 hours, a day or a long weekend and message us. Rent, service fee, cleaning and damage protection are all shown upfront." },
     { icon: Truck, title: "Collect it fresh", text: "Professionally cleaned before every rental. Pick it up from us, or we arrange local delivery at cost." },
-    { icon: Sparkles, title: "Shine & return", text: "Wear it, love it, hand it back. No laundry. We check it and refund your deposit, usually the same day." },
+    { icon: Sparkles, title: "Shine & return", text: "Wear it, love it, hand it back. No laundry, and no deposit to chase." },
   ],
   lender: [
     { icon: Camera, title: "Snap & send", text: "Fill in the listing form with your size and prices, then send us your photos on WhatsApp. Takes 5 minutes." },
     { icon: Shirt, title: "We review it", text: "We check every piece. If it suits the collection, we photograph it and put it up for rent." },
-    { icon: PackageCheck, title: "We handle the rest", text: "Renters, deposits, handover and cleaning: all managed by ReWear." },
-    { icon: IndianRupee, title: "Get paid", text: "Keep 75% of every rental, paid by UPI once the outfit is back. Your closet, now on payroll." },
+    { icon: PackageCheck, title: "We handle the rest", text: "Renters, payments, handover and cleaning: all managed by ReWear." },
+    { icon: IndianRupee, title: "Get paid", text: "Keep 100% of the price you set, paid once the outfit is back. Your closet, now on payroll." },
   ],
 };
 

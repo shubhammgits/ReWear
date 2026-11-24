@@ -24,11 +24,11 @@ export function EarnSection() {
           <RevealText id="earn-title" text="Your clothes can earn for you." className="text-[clamp(2.6rem,5.5vw,5rem)] leading-[0.98]" />
           <p className="mt-6 max-w-md text-lg text-ivory/70">
             That lehenga from your cousin&apos;s wedding could be paying for your next holiday. Lend it to ReWear: we photograph it, find
-            renters in {site.city}, and handle the deposit, handover and cleaning.
+            renters in {site.city}, and handle payments, handover and cleaning.
           </p>
           <p className="mt-6 flex items-center gap-2 text-sm text-ivory/70">
             <TrendingUp className="h-4 w-4 text-gold" aria-hidden />
-            You keep 75% of every rental, paid by UPI.
+            You keep 100% of the price you set. Renters pay our fee on top.
           </p>
         </div>
 
@@ -48,7 +48,7 @@ export function EarnSection() {
                   <span className="font-sans text-base text-ivory/60"> /month</span>
                 </p>
                 <p className="mt-1 text-xs text-ivory/70">
-                  {items} × {rentals} × {formatINR(price)}, after our 25% fee. An estimate, not a promise
+                  {items} × {rentals} × {formatINR(price)}, what you earn at your own price. An estimate, not a promise
                 </p>
               </div>
               <Button href="/list-your-clothes" variant="gold" size="lg">

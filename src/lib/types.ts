@@ -31,7 +31,6 @@ export interface Item {
   fabric: string;
   color: string;
   pricing: Pricing;
-  deposit: number;
   cleaningFee: number;
   lenderId: string;
   featured?: boolean;

@@ -32,20 +32,22 @@ export function PriceBreakdown({ q }: { q: Quote }) {
           <dd><Rolling value={q.rental} /></dd>
         </div>
         <div className="flex justify-between">
+          <dt className="text-ink/70">ReWear service fee</dt>
+          <dd><Rolling value={q.serviceFee} /></dd>
+        </div>
+        <div className="flex justify-between">
           <dt className="text-ink/70">Professional cleaning</dt>
           <dd><Rolling value={q.cleaningFee} /></dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-ink/70">
-            Security deposit <span className="ml-1 rounded-full bg-gold/20 px-2 py-0.5 text-xs font-semibold text-ink">refundable</span>
-          </dt>
-          <dd><Rolling value={q.deposit} /></dd>
+          <dt className="text-ink/70">Damage protection</dt>
+          <dd><Rolling value={q.protectionFee} /></dd>
         </div>
       </dl>
       <div className="mt-5 flex items-end justify-between border-t border-dashed border-line pt-5">
         <div>
           <p className="text-sm text-ink/70">Total</p>
-          <p className="text-xs text-muted">You get {formatINR(q.deposit)} back after return</p>
+          <p className="text-xs text-muted">No security deposit</p>
         </div>
         <Rolling value={q.total} className="font-display text-4xl text-plum" />
       </div>

@@ -40,27 +40,27 @@
   "faqs": [
     {
       "q": "How does renting work?",
-      "a": "Pick an outfit and tap \"Book on WhatsApp\". We confirm the fit, dates and total in the chat. You pay the rent and cleaning fee by UPI, plus a refundable deposit, then collect the outfit from us or get it delivered locally at cost."
+      "a": "Pick an outfit, choose your dates and pay securely online. You pay the rent, a 12% service fee, the cleaning fee and a small damage protection fee, all shown before you pay. Then collect the outfit from us or get it delivered locally at cost."
     },
     {
       "q": "What if my outfit doesn't fit?",
-      "a": "Every listing shows its size, and we send exact measurements on WhatsApp before you pay. You can also try it on when you collect it."
+      "a": "Every listing shows its size and measurements. Message us on WhatsApp before booking if you want to double-check, and you can try it on when you collect it."
     },
     {
-      "q": "Is the security deposit refundable?",
-      "a": "Yes. We check the outfit when you return it and refund the deposit by UPI, usually the same day. We only deduct for real damage, at the repair cost, and show you the before and after videos."
+      "q": "Is there a security deposit?",
+      "a": "No. Instead you pay a small, non-refundable damage protection fee that covers everyday accidents like minor stains, loose threads and lost buttons."
     },
     {
-      "q": "Who cleans the clothes?",
-      "a": "Every piece goes to a professional dry cleaner between rentals. The cleaning fee is shown upfront, before you pay."
+      "q": "Can I cancel?",
+      "a": "Yes. Cancel 72 hours or more before pickup for a full refund of the rent, or between 72 and 24 hours for half. Within 24 hours the rent isn't refunded. The service fee is never refunded."
     },
     {
       "q": "What happens if something gets damaged?",
-      "a": "Small stains and loose threads are normal wear and are covered by the cleaning fee. We film every outfit at handover and at return, so any real damage is clear to both sides."
+      "a": "Minor damage is covered by the protection fee. For serious damage or loss, you pay the repair cost, or the outfit's value if it can't be repaired. We film every outfit at handover and at return, so it's clear to both sides."
     },
     {
       "q": "How much can I earn as a lender?",
-      "a": "You keep 75% of every rental, paid by UPI once the outfit is back and checked. We photograph your pieces, find renters and handle the deposit and cleaning."
+      "a": "You keep 100% of the price you set. Renters pay our service fee on top. You're paid once the outfit is back and checked, and we handle payments, handover and cleaning."
     }
   ]
 }

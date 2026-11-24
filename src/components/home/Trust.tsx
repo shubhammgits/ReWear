@@ -5,7 +5,7 @@ import { Eyebrow, FadeIn, RevealText } from "@/components/ui/Reveal";
 
 const pillars = [
   { icon: Ruler, title: "Fit, confirmed", text: "Every piece is measured. We send you the exact measurements on WhatsApp before you pay anything." },
-  { icon: Shield, title: "Refundable deposit", text: "Checked on return and refunded by UPI. We only deduct for real damage, at the repair cost, with videos as proof." },
+  { icon: Shield, title: "Damage protection", text: "No security deposit. A small protection fee covers everyday accidents like minor stains, loose threads and lost buttons." },
   { icon: Sparkles, title: "Professionally cleaned", text: "Every outfit is dry-cleaned between rentals. The cleaning fee is shown upfront, never a surprise." },
   { icon: CreditCard, title: "Clear payments", text: "Pay by UPI only after we confirm the outfit, dates and total in writing on WhatsApp." },
 ];

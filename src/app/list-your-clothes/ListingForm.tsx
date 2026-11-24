@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Camera, Check, ChevronLeft, ChevronRight, ImagePlus, MessageCircle, Trash2, Wand2 } from "lucide-react";
 import { OCCASIONS, SIZES, content } from "@/lib/api";
-import { PLATFORM_CUT } from "@/lib/pricing";
 import { site, whatsappLink } from "@/lib/site";
 import type { OccasionName, Size } from "@/lib/types";
 import { cn, formatINR } from "@/lib/utils";
@@ -29,7 +28,6 @@ interface FormState {
   per4h: number;
   perDay: number;
   per3Days: number;
-  deposit: number;
   available: string[];
 }
 
@@ -44,7 +42,6 @@ const initial: FormState = {
   per4h: 399,
   perDay: 799,
   per3Days: 1899,
-  deposit: 1500,
   available: [],
 };
 
@@ -101,7 +98,6 @@ export function ListingForm() {
     `Type: ${form.category}, size ${form.size}, ${form.city}`,
     `Occasions: ${form.occasions.join(", ")}`,
     `Prices: ${formatINR(form.per4h)} / 4 hrs, ${formatINR(form.perDay)} / day, ${formatINR(form.per3Days)} / 3 days`,
-    `Deposit: ${formatINR(form.deposit)}`,
     `Free on: ${[...form.available].sort().join(", ")}`,
     form.description && `About it: ${form.description}`,
     `I'll send ${form.photos.length} photo${form.photos.length === 1 ? "" : "s"} here.`,
@@ -403,17 +399,15 @@ function PricingStep({ form, set }: { form: FormState; set: Setter }) {
     set("per4h", base);
     set("perDay", base * 2);
     set("per3Days", Math.round(base * 4.6));
-    set("deposit", base * 4);
   };
-  const rows: { key: "per4h" | "perDay" | "per3Days" | "deposit"; label: string; hint: string }[] = [
+  const rows: { key: "per4h" | "perDay" | "per3Days"; label: string; hint: string }[] = [
     { key: "per4h", label: "Per 4 hours", hint: "Great for interviews, shoots & dinners" },
     { key: "perDay", label: "Per day", hint: "Most popular for parties & functions" },
     { key: "per3Days", label: "Per 3 days", hint: "Weddings & long weekends" },
-    { key: "deposit", label: "Security deposit", hint: "Refunded to the renter after a safe return" },
   ];
   return (
     <div>
-      <StepTitle title="Name your price." hint="You keep 75% of every rental. We handle renters, deposits and cleaning." />
+      <StepTitle title="Name your price." hint="You keep 100% of the price you set. Renters pay our service fee on top, and we handle payments and cleaning." />
       <button type="button" onClick={suggest} className="mb-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-gold/20 px-4 text-sm font-semibold text-ink hover:bg-gold/30">
         <Wand2 className="h-4 w-4" aria-hidden /> Suggest prices for me
       </button>
@@ -438,7 +432,7 @@ function PricingStep({ form, set }: { form: FormState; set: Setter }) {
         ))}
       </div>
       <p className="surface-dark mt-6 rounded-2xl bg-plum p-5 text-ivory">
-        At 2 day-rentals a month you&apos;d earn about <strong className="text-gold">{formatINR(form.perDay * 2 * (1 - PLATFORM_CUT))}</strong>. Not bad for
+        At 2 day-rentals a month you&apos;d earn about <strong className="text-gold">{formatINR(form.perDay * 2)}</strong>. Not bad for
         something that was sitting in a cupboard.
       </p>
     </div>

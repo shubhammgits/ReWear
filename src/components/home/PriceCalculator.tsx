@@ -20,7 +20,7 @@ export function PriceCalculator() {
   const [unit, setUnit] = useState<DurationUnit>("hours");
   const [amount, setAmount] = useState(6);
   const item = options.find((o) => o.id === itemId)!;
-  const q = quote(item.pricing, amount, unit, item.cleaningFee, item.deposit);
+  const q = quote(item.pricing, amount, unit, item.cleaningFee);
 
   const switchUnit = (u: DurationUnit) => {
     setUnit(u);
@@ -34,7 +34,7 @@ export function PriceCalculator() {
           <Eyebrow>Honest pricing</Eyebrow>
           <RevealText id="calc-title" text="Know the price before you fall in love." className="text-[clamp(2.4rem,5vw,4.2rem)] leading-[1]" />
           <p className="mt-6 max-w-md text-lg text-ink/70">
-            Slide to your plans. Rent only the hours you need. No hidden fees, ever: cleaning is included and your deposit comes back.
+            Slide to your plans. Rent only the hours you need. No hidden fees and no security deposit: every charge is shown before you pay.
           </p>
           <fieldset className="mt-10">
             <legend className="mb-3 text-sm font-medium text-ink/70">Try it with</legend>

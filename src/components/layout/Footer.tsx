@@ -32,6 +32,14 @@ const columns = [
   },
 ];
 
+const policies = [
+  ["Terms", "/terms"],
+  ["Privacy", "/privacy"],
+  ["Cancellation & refunds", "/refunds"],
+  ["Pickup & delivery", "/delivery"],
+  ["Contact", "/contact"],
+];
+
 export function Footer() {
   return (
     <footer className="surface-dark relative overflow-hidden bg-ink text-ivory">
@@ -75,7 +83,13 @@ export function Footer() {
       </p>
       <div className="mx-auto flex max-w-7xl flex-col gap-2 border-t border-ivory/10 px-6 pb-28 pt-6 text-xs md:pb-6 text-ivory/60 sm:flex-row sm:justify-between">
         <p>© {new Date().getFullYear()} ReWear. Made with love (and lots of coffee) in India.</p>
-        <p>Some images via Unsplash</p>
+        <nav aria-label="Policies" className="flex flex-wrap gap-x-4">
+          {policies.map(([label, href]) => (
+            <Link key={href} href={href} className="inline-flex min-h-11 items-center transition hover:text-ivory sm:min-h-0">
+              {label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </footer>
   );

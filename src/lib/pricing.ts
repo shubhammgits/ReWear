@@ -1,13 +1,16 @@
 import type { DurationUnit, Pricing } from "./types";
 
-/** ReWear's share of each rental; the lender keeps the rest */
-export const PLATFORM_CUT = 0.25;
+/** Added on top of the lender's price; covers payment costs and ReWear's earnings. The lender keeps their full price */
+export const SERVICE_FEE_RATE = 0.12;
+/** Flat, non-refundable cover for minor damage, charged instead of a security deposit */
+export const PROTECTION_FEE = 149;
 
 export interface Quote {
+  /** The lender's price for this duration; all of it goes to the lender */
   rental: number;
+  serviceFee: number;
   cleaningFee: number;
-  deposit: number;
-  /** What the renter pays now (deposit is held and refunded) */
+  protectionFee: number;
   total: number;
   hours: number;
   label: string;
@@ -31,18 +34,20 @@ export function rentalPrice(p: Pricing, amount: number, unit: DurationUnit): num
   return Math.round(p.per3Days + (days - 3) * p.perDay * 0.7);
 }
 
-export function quote(p: Pricing, amount: number, unit: DurationUnit, cleaningFee: number, deposit: number): Quote {
+export function quote(p: Pricing, amount: number, unit: DurationUnit, cleaningFee: number): Quote {
   const rental = rentalPrice(p, amount, unit);
+  const serviceFee = Math.round(rental * SERVICE_FEE_RATE);
   return {
     rental,
+    serviceFee,
     cleaningFee,
-    deposit,
-    total: rental + cleaningFee + deposit,
+    protectionFee: PROTECTION_FEE,
+    total: rental + serviceFee + cleaningFee + PROTECTION_FEE,
     hours: unit === "hours" ? amount : amount * 24,
     label: unit === "hours" ? `${amount} hrs` : `${amount} ${amount === 1 ? "day" : "days"}`,
   };
 }
 
 export function lenderEarnings(items: number, rentalsPerItem: number, avgPrice: number) {
-  return Math.round(items * rentalsPerItem * avgPrice * (1 - PLATFORM_CUT));
+  return Math.round(items * rentalsPerItem * avgPrice);
 }

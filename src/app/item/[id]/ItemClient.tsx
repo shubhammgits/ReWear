@@ -44,7 +44,7 @@ export function ItemClient({ item, reviews, similar }: { item: Item; reviews: Re
     return () => io.disconnect();
   }, []);
 
-  const q = quote(item.pricing, amount, unit, item.cleaningFee, item.deposit);
+  const q = quote(item.pricing, amount, unit, item.cleaningFee);
 
   const returnAt = useMemo(() => {
     const start = new Date(`${date}T${time}`);
@@ -58,7 +58,7 @@ export function ItemClient({ item, reviews, similar }: { item: Item; reviews: Re
     [
       `Hi ReWear! I'd like to rent "${item.name}" (${item.id}, size ${item.size}).`,
       `For ${q.label}${startAt ? `, from ${startAt}` : ""}.`,
-      `Quoted total: ${formatINR(q.total)} incl. refundable deposit.`,
+      `Quoted total: ${formatINR(q.total)}.`,
       "Is it available?",
     ].join("\n")
   );
@@ -244,7 +244,7 @@ export function ItemClient({ item, reviews, similar }: { item: Item; reviews: Re
             <div className="mx-auto flex max-w-xl items-center justify-between gap-4">
               <div className="min-w-0">
                 <p className="font-display text-2xl leading-none">{formatINR(q.total)}</p>
-                <p className="mt-1 truncate text-sm text-muted">for {q.label} · incl. refundable deposit</p>
+                <p className="mt-1 truncate text-sm text-muted">for {q.label} · all fees included</p>
               </div>
               <Button onClick={() => bookRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })} className="shrink-0 whitespace-nowrap" magnetic={false}>
                 Choose dates
