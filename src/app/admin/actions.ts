@@ -174,3 +174,87 @@ export async function markPayoutPaid(f: FormData) {
   if (error) back("/admin/payouts", { error: error.message });
   back("/admin/payouts", { ok: "Marked as paid." });
 }
+
+/* ───────── Deleting ───────── */
+
+export async function deleteLender(f: FormData) {
+  const { sb } = await requireAdmin();
+  const id = str(f, "id");
+  const [{ count: outfits }, { count: payouts }] = await Promise.all([
+    sb.from("outfits").select("id", { count: "exact", head: true }).eq("lender_id", id),
+    sb.from("payouts").select("id", { count: "exact", head: true }).eq("lender_id", id),
+  ]);
+  if (outfits) back("/admin/lenders", { error: `This lender still has ${outfits} outfit(s). Delete or move those first (retire them if they were ever booked).` });
+  if (payouts) back("/admin/lenders", { error: "This lender has payout records, which are kept for your accounts. Edit their details instead." });
+  const { error } = await sb.from("lenders").delete().eq("id", id);
+  if (error) back("/admin/lenders", { error: error.message });
+  back("/admin/lenders", { ok: "Lender deleted." });
+}
+
+/** Only outfits that were never booked can be deleted; booked ones are retired so the booking history stays intact */
+export async function deleteOutfit(f: FormData) {
+  await requireAdmin();
+  const db = supabaseService();
+  const id = str(f, "id");
+  const { count } = await db.from("bookings").select("id", { count: "exact", head: true }).eq("outfit_id", id);
+  if (count) back(`/admin/outfits/${id}`, { error: "This outfit has bookings, so it's kept for the records. Use Retire to hide it from the site." });
+  const { data: photos } = await db.from("outfit_photos").select("path").eq("outfit_id", id);
+  if (photos?.length) await db.storage.from("outfit-photos").remove(photos.map((p) => p.path));
+  const { error } = await db.from("outfits").delete().eq("id", id);
+  if (error) back(`/admin/outfits/${id}`, { error: error.message });
+  refreshSite();
+  back("/admin/outfits", { ok: "Outfit and its photos deleted." });
+}
+
+/* ───────── Renters (all signed-up accounts) ───────── */
+
+const RENTERS = "/admin/renters";
+
+export async function setUserRole(f: FormData) {
+  const { user } = await requireAdmin();
+  const id = str(f, "id");
+  const role = str(f, "role");
+  if (!["renter", "admin"].includes(role)) back(RENTERS, { error: "Unknown role" });
+  if (id === user.id) back(RENTERS, { error: "You can't change your own role." });
+  const { error } = await supabaseService().from("profiles").update({ role }).eq("id", id);
+  if (error) back(RENTERS, { error: error.message });
+  back(RENTERS, { ok: role === "admin" ? "They're now an admin." : "Admin rights removed." });
+}
+
+/** Blocked accounts can't sign in; their bookings stay as they are */
+export async function setUserBlocked(f: FormData) {
+  const { user } = await requireAdmin();
+  const id = str(f, "id");
+  const block = str(f, "block") === "1";
+  if (id === user.id) back(RENTERS, { error: "You can't block yourself." });
+  const { error } = await supabaseService().auth.admin.updateUserById(id, { ban_duration: block ? "876000h" : "none" });
+  if (error) back(RENTERS, { error: error.message });
+  back(RENTERS, { ok: block ? "Account blocked. They can no longer sign in." : "Account unblocked." });
+}
+
+/**
+ * Deletes an account that never booked. Accounts with bookings are kept, because booking and
+ * payment records must be kept for tax purposes (see the privacy policy); block them instead.
+ */
+export async function deleteUser(f: FormData) {
+  const { user } = await requireAdmin();
+  const db = supabaseService();
+  const id = str(f, "id");
+  if (id === user.id) back(RENTERS, { error: "You can't delete your own account here." });
+  const { count } = await db
+    .from("bookings")
+    .select("id", { count: "exact", head: true })
+    .eq("renter_id", id)
+    .in("status", ["confirmed", "handed_over", "returned", "cancelled"]);
+  if (count) back(RENTERS, { error: "This person has paid bookings, which must be kept for your records. Block the account instead." });
+  // Unpaid checkout attempts hold no money; clear them so the account can go
+  const { data: unpaid } = await db.from("bookings").select("id").eq("renter_id", id);
+  const ids = (unpaid ?? []).map((b) => b.id);
+  if (ids.length) {
+    await db.from("payments").delete().in("booking_id", ids);
+    await db.from("bookings").delete().in("id", ids);
+  }
+  const { error } = await db.auth.admin.deleteUser(id);
+  if (error) back(RENTERS, { error: error.message });
+  back(RENTERS, { ok: "Account deleted." });
+}

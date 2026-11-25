@@ -37,7 +37,12 @@ export default async function PayoutsPage({ searchParams }: { searchParams: Prom
   return (
     <>
       <Notice ok={sp.ok} error={sp.error} />
-      <h2 className="text-2xl">Owed to lenders</h2>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-2xl">Owed to lenders</h2>
+        <a href="/admin/export/payouts" className={btn.secondary} download>
+          Download Excel
+        </a>
+      </div>
       <p className="mt-1 text-sm text-muted">
         A payout appears when an outfit is returned (the full rent) or when a renter cancels late (the rent they forfeit). Send it by UPI, then
         mark it paid with the reference.

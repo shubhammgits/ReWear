@@ -9,7 +9,9 @@ const tabs = [
   { href: "/admin/bookings", label: "Bookings" },
   { href: "/admin/outfits", label: "Outfits" },
   { href: "/admin/lenders", label: "Lenders" },
+  { href: "/admin/renters", label: "Renters" },
   { href: "/admin/payouts", label: "Payouts" },
+  { href: "/admin/export", label: "Download data" },
 ];
 
 export function AdminNav() {

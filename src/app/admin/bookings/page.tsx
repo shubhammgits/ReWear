@@ -29,7 +29,10 @@ export default async function AdminBookingsPage({ searchParams }: { searchParams
   return (
     <>
       <Notice ok={sp.ok} error={sp.error} />
-      <div className="mb-5 flex flex-wrap gap-2">
+      <div className="mb-5 flex flex-wrap items-center gap-2">
+        <a href="/admin/export/bookings" className="order-last ml-auto inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium ring-1 ring-inset ring-ink/20 hover:ring-ink/50" download>
+          Download Excel
+        </a>
         {Object.entries(views).map(([k, v]) => (
           <Link
             key={k}

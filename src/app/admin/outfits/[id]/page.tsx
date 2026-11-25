@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { ExternalLink } from "lucide-react";
 import type { OutfitRow } from "@/lib/catalog";
 import { requireAdmin } from "@/lib/supabase/server";
-import { setOutfitStatus } from "../../actions";
+import { deleteOutfit, setOutfitStatus } from "../../actions";
+import { ConfirmButton } from "../../ConfirmButton";
 import { Badge, Card, Notice, btn, statusTone } from "../../ui";
 import { OutfitForm } from "../OutfitForm";
 import { PhotoManager } from "../PhotoManager";
@@ -64,6 +65,19 @@ export default async function EditOutfitPage({ params, searchParams }: { params:
       </Card>
 
       <OutfitForm outfit={outfit} lenders={lenders ?? []} />
+
+      <Card className="mt-10 ring-red-200">
+        <h3 className="text-lg">Delete this outfit</h3>
+        <p className="mt-1 text-sm text-muted">
+          Removes it and its photos for good. Only possible if it was never booked; otherwise use Retire, which hides it but keeps the booking history.
+        </p>
+        <form action={deleteOutfit} className="mt-4">
+          <input type="hidden" name="id" value={outfit.id} />
+          <ConfirmButton className={btn.danger} message={`Delete "${outfit.name}" and all its photos? This can't be undone.`}>
+            Delete outfit
+          </ConfirmButton>
+        </form>
+      </Card>
     </>
   );
 }

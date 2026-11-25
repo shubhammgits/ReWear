@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/lib/supabase/server";
-import { saveLender } from "../actions";
+import { deleteLender, saveLender } from "../actions";
+import { ConfirmButton } from "../ConfirmButton";
 import { Card, Empty, Field, Notice, btn, input } from "../ui";
 
 interface Lender {
@@ -22,9 +23,14 @@ export default async function LendersPage({ searchParams }: { searchParams: Prom
       <Notice ok={sp.ok} error={sp.error} />
       <div className="grid gap-8 lg:grid-cols-[1fr_22rem]">
         <section aria-labelledby="lenders-h">
-          <h2 id="lenders-h" className="mb-4 text-2xl">
-            Lenders
-          </h2>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h2 id="lenders-h" className="text-2xl">
+              Lenders
+            </h2>
+            <a href="/admin/export/lenders" className={btn.secondary} download>
+              Download Excel
+            </a>
+          </div>
           {lenders.length === 0 ? (
             <Empty>Add yourself first, then each friend whose clothes you list. Every outfit belongs to a lender.</Empty>
           ) : (
@@ -39,9 +45,19 @@ export default async function LendersPage({ searchParams }: { searchParams: Prom
                       </p>
                       {l.notes && <p className="mt-1 text-sm text-ink/70">{l.notes}</p>}
                     </div>
-                    <a href={`/admin/lenders?edit=${l.id}`} className={btn.secondary}>
-                      Edit
-                    </a>
+                    <div className="flex gap-2">
+                      <a href={`/admin/lenders?edit=${l.id}`} className={btn.secondary}>
+                        Edit
+                      </a>
+                      {(l.outfits[0]?.count ?? 0) === 0 && (
+                        <form action={deleteLender}>
+                          <input type="hidden" name="id" value={l.id} />
+                          <ConfirmButton className={`${btn.secondary} text-red-800`} message={`Delete ${l.name}? This can't be undone.`}>
+                            Delete
+                          </ConfirmButton>
+                        </form>
+                      )}
+                    </div>
                   </Card>
                 </li>
               ))}

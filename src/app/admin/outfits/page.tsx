@@ -18,9 +18,14 @@ export default async function OutfitsPage({ searchParams }: { searchParams: Prom
       <Notice ok={sp.ok} error={sp.error} />
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 className="text-2xl">Outfits</h2>
-        <Link href="/admin/outfits/new" className={btn.primary}>
-          <Plus className="h-4 w-4" aria-hidden /> Add outfit
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <a href="/admin/export/outfits" className={btn.secondary} download>
+            Download Excel
+          </a>
+          <Link href="/admin/outfits/new" className={btn.primary}>
+            <Plus className="h-4 w-4" aria-hidden /> Add outfit
+          </Link>
+        </div>
       </div>
       {outfits.length === 0 ? (
         <Empty>No outfits yet. Add a lender first, then your first outfit.</Empty>
